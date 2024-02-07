@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model UserRole {
+  id    String       @id @default(auto()) @map("_id") @db.ObjectId
+  name  String       @unique()
+  code  UserRoleEnum @unique() @default(CUSTOMER)
+  users User[]
+
+  @@unique([name, code])
+}
+
+model User {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  email       String    @unique
+  username    String    @unique
+  password    String
+  fullName    String?
+  imgUrl      String?
+  phoneNumber String?
+  dob         DateTime?
+  addressess  Address[]
+  role        UserRole? @relation(fields: [roleId], references: [id])
+  roleId      String?   @db.ObjectId
+}
+
+type Address {
+  address            String
+  provinceId         String
+  cityId             String
+  subDistrictId      String
+  zipCode            String
+  latitude           Float?
+  longitude          Float?
+  benchmark          String?
+  contactName        String
+  contactPhoneNumber String
+  tag                AddressTagEnum @default(HOME)
+  isMainAddress      Boolean        @default(false)
+}
+
+enum AddressTagEnum {
+  OFFICE
+  HOME
+}
+
+enum UserRoleEnum {
+  SUPERADMIN
+  ADMIN
+  CUSTOMER
+}
