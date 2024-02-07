@@ -30,6 +30,27 @@ const responseTypeDefs = `#graphql
     error: String
     data: DataLogin
   }
+
+  type ResponseCategories implements Response {
+    statusCode: Int
+    message: String
+    error: String
+    data: [Category]
+  }
+
+  type ResponseProducts implements Response {
+    statusCode: Int
+    message: String
+    error: String
+    data: [Product]
+  }
+
+  type ResponseProduct implements Response {
+    statusCode: Int
+    message: String
+    error: String
+    data: Product
+  }
 `;
 
 export default responseTypeDefs;

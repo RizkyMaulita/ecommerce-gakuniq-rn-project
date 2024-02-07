@@ -6,10 +6,12 @@ import { GraphQLError, GraphQLFormattedError } from "graphql";
 import { ErrorCodeEnum } from "./enums/error.enum";
 import { authentication } from "./utils/auth";
 import { ServerContext } from "./types/server.types";
+import { productResolvers, productTypeDefs } from "./schemas/products";
+import { categoryTypeDefs, categoryResolvers } from "./schemas/category";
 
 const server = new ApolloServer<ServerContext>({
-  typeDefs: [userTypeDefs, responseTypeDefs],
-  resolvers: [userResolvers],
+  typeDefs: [userTypeDefs, responseTypeDefs, productTypeDefs, categoryTypeDefs],
+  resolvers: [userResolvers, productResolvers, categoryResolvers],
   formatError: (formattedError: GraphQLFormattedError, _error: any) => {
     let statusCode = 500;
     let message = formattedError.message;

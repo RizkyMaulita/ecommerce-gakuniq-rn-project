@@ -37,6 +37,7 @@ model User {
   addressess  Address[]
   role        UserRole? @relation(fields: [roleId], references: [id])
   roleId      String?   @db.ObjectId
+  carts       Cart[]
 }
 
 type Address {
@@ -81,14 +82,15 @@ model Product {
   category    Category?         @relation(fields: [categoryId], references: [id])
   documents   ProductDoc[]
   sourceUrl   String?
+  carts       Cart[]
 }
 
 type ProductDoc {
   url  String
-  type ProductDocEnum
+  type ProductDocTypeEnum
 }
 
-enum ProductDocEnum {
+enum ProductDocTypeEnum {
   VIDEO
   IMAGE
 }
@@ -97,4 +99,14 @@ enum ProductGenderEnum {
   MALE
   FEMALE
   UNISEX
+}
+
+// ----- Collection Cart
+model Cart {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  productId String  @db.ObjectId
+  userId    String  @db.ObjectId
+  quantity  Int
+  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 }
