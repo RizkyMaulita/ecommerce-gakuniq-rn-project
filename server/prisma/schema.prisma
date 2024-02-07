@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ----- Collection UserRole
 model UserRole {
   id    String       @id @default(auto()) @map("_id") @db.ObjectId
   name  String       @unique()
@@ -15,6 +16,14 @@ model UserRole {
 
   @@unique([name, code])
 }
+
+enum UserRoleEnum {
+  SUPERADMIN
+  ADMIN
+  CUSTOMER
+}
+
+// ----- Collection User
 
 model User {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -50,8 +59,42 @@ enum AddressTagEnum {
   HOME
 }
 
-enum UserRoleEnum {
-  SUPERADMIN
-  ADMIN
-  CUSTOMER
+// ----- Collection Category
+model Category {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  products Product[]
+}
+
+// ----- Collection Product
+model Product {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  slug        String
+  imgUrl      String
+  price       Int
+  stock       Int
+  rate        Float?
+  gender      ProductGenderEnum
+  categoryId  String?           @db.ObjectId
+  category    Category?         @relation(fields: [categoryId], references: [id])
+  documents   ProductDoc[]
+  sourceUrl   String?
+}
+
+type ProductDoc {
+  url  String
+  type ProductDocEnum
+}
+
+enum ProductDocEnum {
+  VIDEO
+  IMAGE
+}
+
+enum ProductGenderEnum {
+  MALE
+  FEMALE
+  UNISEX
 }

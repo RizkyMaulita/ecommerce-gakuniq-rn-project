@@ -8,7 +8,7 @@
     "dev": "npx tsx watch ./src/index.ts",
     "start": "npm run compile && node ./dist/index.js",
     "db:generate": "npx prisma generate",
-    "db:seed": "npx tsx prisma/seed/user.seed.ts"
+    "db:seed": "npx tsx prisma/seed/products.seed.ts"
   },
   "keywords": [],
   "author": "",

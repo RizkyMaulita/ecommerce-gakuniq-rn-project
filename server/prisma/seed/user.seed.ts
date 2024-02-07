@@ -31,7 +31,7 @@ const prisma = new PrismaClient();
 
     const users = await prisma.user.createMany({ data });
 
-    console.log(users);
+    console.log(`Successfully seeding data users with count : ${users.count}`);
   } catch (error) {
     console.log(error);
   } finally {

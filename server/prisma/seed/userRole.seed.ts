@@ -24,7 +24,7 @@ const prisma = new PrismaClient();
       })),
     });
 
-    console.log(roles);
+    console.log(`Successfully seeding data roles with count : ${roles.count}`);
   } catch (error) {
     console.log(error);
   } finally {
