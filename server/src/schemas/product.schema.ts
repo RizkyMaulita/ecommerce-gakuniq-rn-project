@@ -1,4 +1,6 @@
-import prisma from "@/models";
+import { findProduct, findProducts } from "@/models/product.model";
+import { ResponseType } from "@/types/response.types";
+import { Product } from "@prisma/client";
 
 export const productTypeDefs = `#graphql
   type Product {
@@ -41,11 +43,11 @@ export const productTypeDefs = `#graphql
 
 export const productResolvers = {
   Query: {
-    getProducts: async (_, { categoryId }) => {
-      const products = await prisma.product.findMany({
-        where: categoryId ? { categoryId } : {},
-        include: { category: true },
-      });
+    getProducts: async (
+      _,
+      { categoryId }
+    ): Promise<ResponseType<Product[]>> => {
+      const products = await findProducts(categoryId ? { categoryId } : {});
 
       return {
         statusCode: 200,
@@ -53,11 +55,8 @@ export const productResolvers = {
         data: products,
       };
     },
-    getProduct: async (_, { productId }) => {
-      const product = await prisma.product.findFirst({
-        where: { id: productId },
-        include: { category: true },
-      });
+    getProduct: async (_, { productId }): Promise<ResponseType<Product>> => {
+      const product = await findProduct({ id: productId });
 
       return {
         statusCode: 200,

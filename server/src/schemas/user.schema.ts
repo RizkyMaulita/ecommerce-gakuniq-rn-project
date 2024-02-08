@@ -1,10 +1,21 @@
-import prisma from "../models";
 import { excludeFields } from "../utils/excludeFields";
-import { registerUser } from "../models/user";
-import { ErrorCodeEnum } from "@/enums/error.enum";
+import {
+  findUser,
+  findUsers,
+  registerUser,
+  updateStatusVerifyUser,
+} from "../models/user.model";
 import { comparePassword } from "@/utils/bcrypt";
 import { generateToken } from "@/utils/jwt";
 import { ServerContext } from "@/types/server.types";
+import { ErrorCodeEnum, generateInstanceError } from "@/utils/error.response";
+import { ResponseType } from "@/types/response.types";
+import { User } from "@prisma/client";
+
+type ResLoginType = {
+  token: string;
+  user: Omit<User, "password">;
+};
 
 export const userTypeDefs = `#graphql
   type UserRole {
@@ -22,9 +33,12 @@ export const userTypeDefs = `#graphql
     imgUrl: String
     phoneNumber: String
     dob: String
+    statusVerify: UserVerifyStatusEnum
     addresses: [Address]
     roleId: ID
     role: UserRole 
+    createdAt: String
+    updatedAt: String
   }
 
   type Address {
@@ -47,6 +61,12 @@ export const userTypeDefs = `#graphql
     HOME
   }
 
+  enum UserVerifyStatusEnum {
+    PENDING
+    VERIFIED
+    NOT_VERIFIED
+  }
+
   input RegisterInput {
     username: String!
     email: String!
@@ -65,13 +85,14 @@ export const userTypeDefs = `#graphql
   type Mutation {
     register(payload: RegisterInput): ResponseUser
     login(username: String!, password: String!): ResponseLogin
+    updateVerifyStatus(status: UserVerifyStatusEnum!): ResponseUser
   } 
 `;
 
 export const userResolvers = {
   Query: {
-    findUsers: async () => {
-      const data = await prisma.user.findMany();
+    findUsers: async (): Promise<ResponseType<Omit<User, "password">[]>> => {
+      const data = await findUsers();
       const users = data.map((user) => excludeFields(user, ["password"]));
 
       return {
@@ -80,13 +101,14 @@ export const userResolvers = {
         data: users,
       };
     },
-    getMyProfile: async (_, _args, { authN }: ServerContext) => {
+    getMyProfile: async (
+      _,
+      _args,
+      { authN }: ServerContext
+    ): Promise<ResponseType<Omit<User, "password">>> => {
       const userLogin = await authN();
 
-      const user = await prisma.user.findFirst({
-        where: { id: userLogin.id },
-        include: { role: true },
-      });
+      const user = await findUser({ id: userLogin.id });
 
       return {
         statusCode: 200,
@@ -96,7 +118,25 @@ export const userResolvers = {
     },
   },
   Mutation: {
-    register: async (_, { payload }) => {
+    register: async (
+      _,
+      { payload }
+    ): Promise<ResponseType<Omit<User, "password">>> => {
+      const { username, email } = payload;
+      const isExistUser = await findUser({
+        OR: [{ email }, { username }],
+      });
+
+      if (isExistUser) {
+        throw generateInstanceError({
+          message: `${
+            isExistUser.username === username ? "Username" : "Email"
+          } has been exist`,
+          code: ErrorCodeEnum.BAD_REQUEST,
+          statusCode: 400,
+        });
+      }
+
       const user = await registerUser(
         {
           ...payload,
@@ -111,25 +151,20 @@ export const userResolvers = {
         data: excludeFields(user, ["password"]),
       };
     },
-    login: async (_, { username, password }) => {
-      const user = await prisma.user.findFirst({
-        where: {
-          OR: [
-            {
-              email: username,
-            },
-            { username },
-          ],
-        },
-        include: { role: true },
+    login: async (
+      _,
+      { username, password }
+    ): Promise<ResponseType<ResLoginType>> => {
+      const user = await findUser({
+        OR: [{ email: username }, { username }],
       });
 
-      if (!user) {
-        throw new Error(ErrorCodeEnum.INVALID_LOGIN);
-      }
-
-      if (!comparePassword(password, user.password)) {
-        throw new Error(ErrorCodeEnum.INVALID_LOGIN);
+      if (!user || !comparePassword(password, user?.password)) {
+        throw generateInstanceError({
+          message: "Invalid username / password",
+          code: ErrorCodeEnum.INVALID_LOGIN,
+          statusCode: 401,
+        });
       }
 
       const token = generateToken({
@@ -147,6 +182,21 @@ export const userResolvers = {
           token,
           user: excludeFields(user, ["password"]),
         },
+      };
+    },
+    updateVerifyStatus: async (
+      _,
+      { status },
+      { authN }: ServerContext
+    ): Promise<ResponseType<Omit<User, "password">>> => {
+      const userLogin = await authN();
+
+      const user = await updateStatusVerifyUser(userLogin.id, status);
+
+      return {
+        statusCode: 200,
+        message: `Successfully update status user`,
+        data: excludeFields(user, ["password"]),
       };
     },
   },

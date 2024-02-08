@@ -1,8 +1,8 @@
-import { ErrorCodeEnum } from "@/enums/error.enum";
 import { ReqUserLoginType } from "@/types/user.types";
 import { StandaloneServerContextFunctionArgument } from "@apollo/server/dist/esm/standalone";
 import { verifyToken } from "./jwt";
 import prisma from "@/models";
+import { ErrorCodeEnum, generateInstanceError } from "./error.response";
 
 export const authentication = async ({
   req,
@@ -10,13 +10,21 @@ export const authentication = async ({
   const { authorization } = req.headers;
 
   if (!authorization) {
-    throw new Error(ErrorCodeEnum.INVALID_TOKEN);
+    throw generateInstanceError({
+      message: `Invalid Token`,
+      code: ErrorCodeEnum.INVALID_TOKEN,
+      statusCode: 401,
+    });
   }
 
   const token = authorization.split("Bearer ")[1];
 
   if (!token) {
-    throw new Error(ErrorCodeEnum.INVALID_TOKEN);
+    throw generateInstanceError({
+      message: `Invalid Token`,
+      code: ErrorCodeEnum.INVALID_TOKEN,
+      statusCode: 401,
+    });
   }
 
   const decodedToken = verifyToken(token);
@@ -33,7 +41,11 @@ export const authentication = async ({
   });
 
   if (!user) {
-    throw new Error(ErrorCodeEnum.UNAUTHENTICATION);
+    throw generateInstanceError({
+      message: `Unauthentication`,
+      code: ErrorCodeEnum.UNAUTHENTICATION,
+      statusCode: 401,
+    });
   }
 
   return {

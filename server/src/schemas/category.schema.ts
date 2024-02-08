@@ -1,4 +1,6 @@
-import prisma from "@/models";
+import { findCategories } from "@/models/category.model";
+import { ResponseType } from "@/types/response.types";
+import { Category } from "@prisma/client";
 
 export const categoryTypeDefs = `#graphql
   type Category {
@@ -13,8 +15,8 @@ export const categoryTypeDefs = `#graphql
 
 export const categoryResolvers = {
   Query: {
-    getCategories: async () => {
-      const categories = await prisma.category.findMany();
+    getCategories: async (): Promise<ResponseType<Category[]>> => {
+      const categories = await findCategories({});
 
       return {
         statusCode: 200,

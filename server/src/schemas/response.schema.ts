@@ -51,6 +51,20 @@ const responseTypeDefs = `#graphql
     error: String
     data: Product
   }
+
+  type ResponseCart implements Response {
+    statusCode: Int
+    message: String
+    error: String
+    data: Cart
+  }
+
+  type ResponseCarts implements Response {
+    statusCode: Int
+    message: String
+    error: String
+    data: [Cart]
+  }
 `;
 
 export default responseTypeDefs;
