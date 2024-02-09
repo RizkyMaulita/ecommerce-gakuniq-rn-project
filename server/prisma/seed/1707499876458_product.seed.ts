@@ -1,11 +1,11 @@
-import prisma from "@/models";
+import { Prisma, PrismaClient } from "@prisma/client";
 import dataProducts, { ProductCategorySeedEnum } from "./data/products.data";
-import { Prisma } from "@prisma/client";
 import { generateSlug } from "@/utils/generateSlug";
 
-(async () => {
+const prisma = new PrismaClient();
+
+export const run = async () => {
   try {
-    await prisma.$connect();
     await prisma.category.createMany({
       data: Object.keys(ProductCategorySeedEnum).map((category) => ({
         name: category,
@@ -44,7 +44,6 @@ import { generateSlug } from "@/utils/generateSlug";
     );
   } catch (error) {
     console.log(error);
-  } finally {
-    await prisma.$disconnect();
+    throw error;
   }
-})();
+};

@@ -2,9 +2,8 @@ import { PrismaClient, UserRoleEnum } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-(async () => {
+export const run = async () => {
   try {
-    await prisma.$connect();
     const findRoles = await prisma.userRole.findMany({
       where: {
         code: {
@@ -14,7 +13,7 @@ const prisma = new PrismaClient();
     });
 
     if (findRoles.length) {
-      throw "roles has been exists";
+      throw new Error("roles has been exists");
     }
 
     const roles = await prisma.userRole.createMany({
@@ -26,8 +25,7 @@ const prisma = new PrismaClient();
 
     console.log(`Successfully seeding data roles with count : ${roles.count}`);
   } catch (error) {
-    console.log(error);
-  } finally {
-    await prisma.$disconnect();
+    console.error(error);
+    throw error;
   }
-})();
+};

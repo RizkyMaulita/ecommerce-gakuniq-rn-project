@@ -1,12 +1,11 @@
-import { Prisma, PrismaClient } from "@prisma/client";
 import { hashPassword } from "@/utils/bcrypt";
 import { generateAddressEmail } from "@/utils/email";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-(async () => {
+export const run = async () => {
   try {
-    await prisma.$connect();
     const roles = await prisma.userRole.findMany({
       where: {
         code: {
@@ -16,7 +15,7 @@ const prisma = new PrismaClient();
     });
 
     if (!roles.length) {
-      throw "roles not found";
+      throw new Error("roles not found");
     }
 
     const data = roles.map(
@@ -33,8 +32,7 @@ const prisma = new PrismaClient();
 
     console.log(`Successfully seeding data users with count : ${users.count}`);
   } catch (error) {
-    console.log(error);
-  } finally {
-    await prisma.$disconnect();
+    console.error(error);
+    throw error;
   }
-})();
+};
