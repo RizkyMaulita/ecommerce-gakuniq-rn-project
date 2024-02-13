@@ -1,10 +1,9 @@
-import { WishlistStackParamList } from "@/navigations/WishlistStack";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { WishlistStackScreenProps } from "@/navigations/WishlistStack";
 import { Text, View } from "react-native";
 
-type Props = NativeStackScreenProps<WishlistStackParamList, "MainWishlist">;
-
-export default function WishlistScreen({ navigation }: Props) {
+export default function WishlistScreen({
+  navigation,
+}: WishlistStackScreenProps<"MainWishlist">) {
   return (
     <View>
       <Text>Wishlist Screen</Text>

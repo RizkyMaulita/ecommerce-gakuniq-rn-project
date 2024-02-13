@@ -1,14 +1,21 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabScreenProps,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import ProductStack, { ProductStackParamList } from "./ProductStack";
 import ProfileStack, { ProfileStackParamList } from "./ProfileStack";
 import NotifStack, { NotifStackParamList } from "./NotifStack";
-import { NavigatorScreenParams } from "@react-navigation/native";
+import {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+} from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { utilities } from "@/styles/utilities";
 import TransactionStack, {
   TransactionStackParamList,
 } from "./TransactionStack";
 import WishlistStack, { WishlistStackParamList } from "./WishlistStack";
+import { RootStackParamList, RootStackScreenProps } from "./RootStack";
 
 export type MainTabParamList = {
   Home: NavigatorScreenParams<ProductStackParamList>;
@@ -17,6 +24,12 @@ export type MainTabParamList = {
   Transaction: NavigatorScreenParams<TransactionStackParamList>;
   Wishlist: NavigatorScreenParams<WishlistStackParamList>;
 };
+
+export type MainTabScreenProps<T extends keyof MainTabParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<MainTabParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 

@@ -1,10 +1,9 @@
-import { ProductStackParamList } from "@/navigations/ProductStack";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ProductStackScreenProps } from "@/navigations/ProductStack";
 import { Text, View } from "react-native";
 
-type Props = NativeStackScreenProps<ProductStackParamList, "ProductList">;
-
-export default function ProductListScreen({ navigation, route }: Props) {
+export default function ProductListScreen({
+  navigation,
+}: ProductStackScreenProps<"ProductList">) {
   return (
     <View>
       <Text>Home Screen</Text>

@@ -1,13 +1,41 @@
-import { ProfileStackParamList } from "@/navigations/ProfileStack";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Text, View } from "react-native";
+import { AuthContext } from "@/context/AuthContext";
+import { ProfileStackScreenProps } from "@/navigations/ProfileStack";
+import { globalStyle } from "@/styles/global";
+import { utilities } from "@/styles/utilities";
+import { useContext } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-type Props = NativeStackScreenProps<ProfileStackParamList, "MainProfile">;
+export default function ProfileScreen({
+  navigation,
+}: ProfileStackScreenProps<"MainProfile">) {
+  const { deleteTokenLogin } = useContext(AuthContext);
 
-export default function ProfileScreen({ navigation }: Props) {
+  const doLogout = async () => {
+    await deleteTokenLogin();
+    navigation.navigate("Login");
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Profile Screen</Text>
+      <TouchableOpacity style={styles.btnLogout} onPress={doLogout}>
+        <Text style={[globalStyle.textButton]}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  btnLogout: {
+    ...globalStyle.primaryButton,
+    backgroundColor: utilities.fontColor.gray600,
+    width: "85%",
+    padding: 5,
+    height: 45,
+    borderRadius: 20,
+    alignSelf: "center",
+  },
+});

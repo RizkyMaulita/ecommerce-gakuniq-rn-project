@@ -7,10 +7,18 @@ import { AuthStackScreenProps } from "@/navigations/AuthStack";
 import { AuthContext } from "@/context/AuthContext";
 import { FormInputText } from "@/components/FormInputText";
 
-export default function LoginScreen({
+type FormRegistType = {
+  fullName: string;
+  username: string;
+  email: string;
+  password: string;
+};
+export default function RegisterScreen({
   navigation,
-}: AuthStackScreenProps<"Login">) {
-  const [form, setForm] = useState({
+}: AuthStackScreenProps<"Register">) {
+  const [form, setForm] = useState<FormRegistType>({
+    fullName: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -23,22 +31,36 @@ export default function LoginScreen({
     });
   };
 
-  const onLogin = async () => {
-    // Todo: handle login
+  const onRegist = async () => {
+    // Todo: handle register
     await setTokenLogin("token_login");
     navigation.navigate("Home", { screen: "ProductList" });
   };
 
-  const goRegister = () => {
-    navigation.navigate("Register");
+  const goLogin = () => {
+    navigation.navigate("Login");
   };
 
   return (
     <View style={styles.container}>
-      <View style={{ alignSelf: "center", marginBottom: 20 }}>
-        <Logo />
+      <View style={{ alignSelf: "center", marginBottom: 30 }}>
+        <Text style={globalStyle.logo}>Create Account</Text>
       </View>
       <View style={{ width: "95%", alignSelf: "center" }}>
+        <FormInputText
+          name={"username"}
+          labelName="Username"
+          placeholder="Input Your Username"
+          value={form.username}
+          onChange={onChangeForm}
+        />
+        <FormInputText
+          name={"fullName"}
+          labelName="Full Name"
+          placeholder="Input Your Full Name"
+          value={form.fullName}
+          onChange={onChangeForm}
+        />
         <FormInputText
           name={"email"}
           labelName="Email"
@@ -58,38 +80,27 @@ export default function LoginScreen({
         />
         <TouchableOpacity
           style={[globalStyle.primaryButton, { width: "100%" }]}
-          onPress={onLogin}
+          onPress={onRegist}
         >
-          <Text style={globalStyle.textButton}>SIGN IN</Text>
+          <Text style={globalStyle.textButton}>SIGN UP</Text>
         </TouchableOpacity>
 
         <View
           style={{
             alignSelf: "center",
-            gap: utilities.margin.xs,
             marginTop: utilities.margin.sm,
           }}
         >
-          <TouchableOpacity>
-            <Text
-              style={{
-                textAlign: "center",
-                color: utilities.fontColor.gray900,
-              }}
-            >
-              Forgot Password ?
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={goRegister}>
+          <TouchableOpacity onPress={goLogin}>
             <Text
               style={{
                 textAlign: "center",
                 color: utilities.fontColor.gray600,
               }}
             >
-              Don't have an account ?{" "}
+              Have an account ?{" "}
               <Text style={{ color: utilities.fontColor.gray900 }}>
-                Sign Up
+                Sign In
               </Text>
             </Text>
           </TouchableOpacity>
