@@ -17,6 +17,9 @@ export const registerUser = async (
       addressess: [],
       createdAt: new Date(),
     } as Prisma.UserCreateInput,
+    include: {
+      role: true,
+    },
   });
 
   return createdUser;

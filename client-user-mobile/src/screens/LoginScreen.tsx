@@ -6,15 +6,35 @@ import { utilities } from "@/styles/utilities";
 import { AuthStackScreenProps } from "@/navigations/AuthStack";
 import { AuthContext } from "@/context/AuthContext";
 import { FormInputText } from "@/components/FormInputText";
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "@/lib/apollo/mutations/user";
+
+type FormLoginType = {
+  email: string;
+  password: string;
+};
 
 export default function LoginScreen({
   navigation,
 }: AuthStackScreenProps<"Login">) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormLoginType>({
     email: "",
     password: "",
   });
   const { setTokenLogin } = useContext(AuthContext);
+
+  const [dispatchLogin] = useMutation(LOGIN, {
+    onCompleted: async (res) => {
+      if (res?.login?.data) {
+        const { token, user } = res.login.data;
+
+        await setTokenLogin(token);
+        navigation.navigate("Home", {
+          screen: "ProductList",
+        });
+      }
+    },
+  });
 
   const onChangeForm = (value: string, key: string) => {
     setForm({
@@ -24,9 +44,16 @@ export default function LoginScreen({
   };
 
   const onLogin = async () => {
-    // Todo: handle login
-    await setTokenLogin("token_login");
-    navigation.navigate("Home", { screen: "ProductList" });
+    try {
+      await dispatchLogin({
+        variables: {
+          username: form.email,
+          password: form.password,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const goRegister = () => {
@@ -38,13 +65,15 @@ export default function LoginScreen({
       <View style={{ alignSelf: "center", marginBottom: 20 }}>
         <Logo />
       </View>
+
+      {/* Todo: Handle Error */}
+
       <View style={{ width: "95%", alignSelf: "center" }}>
         <FormInputText
           name={"email"}
-          labelName="Email"
-          placeholder="Input Your Email"
+          labelName="Email / Username"
+          placeholder="Input Your Email / Username"
           value={form.email}
-          type={"email-address"}
           onChange={onChangeForm}
         />
         <FormInputText

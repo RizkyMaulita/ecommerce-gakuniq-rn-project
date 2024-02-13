@@ -6,6 +6,8 @@ import { utilities } from "@/styles/utilities";
 import { AuthStackScreenProps } from "@/navigations/AuthStack";
 import { AuthContext } from "@/context/AuthContext";
 import { FormInputText } from "@/components/FormInputText";
+import { useMutation } from "@apollo/client";
+import { REGISTER } from "@/lib/apollo/mutations/user";
 
 type FormRegistType = {
   fullName: string;
@@ -13,6 +15,7 @@ type FormRegistType = {
   email: string;
   password: string;
 };
+
 export default function RegisterScreen({
   navigation,
 }: AuthStackScreenProps<"Register">) {
@@ -24,6 +27,17 @@ export default function RegisterScreen({
   });
   const { setTokenLogin } = useContext(AuthContext);
 
+  const [dispatchRegist] = useMutation(REGISTER, {
+    onCompleted: async (res) => {
+      if (res?.register?.data) {
+        const { token, user } = res.register.data;
+
+        await setTokenLogin(token);
+        navigation.navigate("Home", { screen: "ProductList" });
+      }
+    },
+  });
+
   const onChangeForm = (value: string, key: string) => {
     setForm({
       ...form,
@@ -32,9 +46,15 @@ export default function RegisterScreen({
   };
 
   const onRegist = async () => {
-    // Todo: handle register
-    await setTokenLogin("token_login");
-    navigation.navigate("Home", { screen: "ProductList" });
+    try {
+      await dispatchRegist({
+        variables: {
+          payload: form,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const goLogin = () => {
@@ -46,6 +66,9 @@ export default function RegisterScreen({
       <View style={{ alignSelf: "center", marginBottom: 30 }}>
         <Text style={globalStyle.logo}>Create Account</Text>
       </View>
+
+      {/* Todo: Handle Error */}
+
       <View style={{ width: "95%", alignSelf: "center" }}>
         <FormInputText
           name={"username"}

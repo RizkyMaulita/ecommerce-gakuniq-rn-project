@@ -83,7 +83,7 @@ export const userTypeDefs = `#graphql
   }
 
   type Mutation {
-    register(payload: RegisterInput): ResponseUser
+    register(payload: RegisterInput): ResponseLogin
     login(username: String!, password: String!): ResponseLogin
     updateVerifyStatus(status: UserVerifyStatusEnum!): ResponseUser
   } 
@@ -118,10 +118,7 @@ export const userResolvers = {
     },
   },
   Mutation: {
-    register: async (
-      _,
-      { payload }
-    ): Promise<ResponseType<Omit<User, "password">>> => {
+    register: async (_, { payload }): Promise<ResponseType<ResLoginType>> => {
       const { username, email } = payload;
       const isExistUser = await findUser({
         OR: [{ email }, { username }],
@@ -145,10 +142,21 @@ export const userResolvers = {
         "CUSTOMER"
       );
 
+      const token = generateToken({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        roleId: user.roleId || "",
+        roleCode: user.role?.code,
+      });
+
       return {
         statusCode: 201,
         message: `Successfully register new user`,
-        data: excludeFields(user, ["password"]),
+        data: {
+          token,
+          user: excludeFields(user, ["password"]),
+        },
       };
     },
     login: async (
