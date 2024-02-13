@@ -24,6 +24,7 @@ export const run = async () => {
           email: generateAddressEmail(role.code.toLowerCase()),
           username: role.name,
           password: hashPassword("password"),
+          statusVerify: "VERIFIED",
           roleId: role.id,
         } as Prisma.UserCreateManyInput)
     );
