@@ -8,10 +8,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function ProfileScreen({
   navigation,
 }: ProfileStackScreenProps<"MainProfile">) {
-  const { deleteTokenLogin } = useContext(AuthContext);
+  const { deleteUserLogin } = useContext(AuthContext);
 
   const doLogout = async () => {
-    await deleteTokenLogin();
+    await deleteUserLogin();
     navigation.navigate("Login");
   };
 

@@ -25,14 +25,19 @@ export default function RegisterScreen({
     email: "",
     password: "",
   });
-  const { setTokenLogin } = useContext(AuthContext);
+  const { setUserLogin } = useContext(AuthContext);
 
   const [dispatchRegist] = useMutation(REGISTER, {
     onCompleted: async (res) => {
       if (res?.register?.data) {
         const { token, user } = res.register.data;
 
-        await setTokenLogin(token);
+        await setUserLogin({
+          token,
+          userId: user?.id,
+          username: user?.username,
+        });
+
         navigation.navigate("Home", { screen: "ProductList" });
       }
     },

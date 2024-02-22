@@ -35,7 +35,7 @@ const getFileNames = (path: string): Promise<string[]> => {
         (seed) => seed.filename === file
       );
 
-      if (isExistSeed) break;
+      if (isExistSeed) continue;
 
       const filePath = path.join(__dirname + `/${file}`);
 

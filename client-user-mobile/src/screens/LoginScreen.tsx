@@ -21,14 +21,19 @@ export default function LoginScreen({
     email: "",
     password: "",
   });
-  const { setTokenLogin } = useContext(AuthContext);
+  const { setUserLogin } = useContext(AuthContext);
 
   const [dispatchLogin] = useMutation(LOGIN, {
     onCompleted: async (res) => {
       if (res?.login?.data) {
         const { token, user } = res.login.data;
 
-        await setTokenLogin(token);
+        await setUserLogin({
+          token,
+          userId: user?.id,
+          username: user?.username,
+        });
+
         navigation.navigate("Home", {
           screen: "ProductList",
         });
