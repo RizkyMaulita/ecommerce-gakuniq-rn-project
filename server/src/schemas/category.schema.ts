@@ -7,6 +7,7 @@ export const categoryTypeDefs = `#graphql
     id: ID
     name: String
     imgUrl: String
+    imgUrlActive: String
   }
 
   type Query {

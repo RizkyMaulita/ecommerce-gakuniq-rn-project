@@ -78,10 +78,11 @@ enum UserVerifyStatusEnum {
 
 // ----- Collection Category
 model Category {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String    @unique()
-  imgUrl   String?
-  products Product[]
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String    @unique()
+  imgUrl       String?
+  imgUrlActive String?
+  products     Product[]
 }
 
 // ----- Collection Product

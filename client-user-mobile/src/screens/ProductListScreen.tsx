@@ -38,6 +38,12 @@ export default function ProductListScreen({
     setSelectedCategoryId(isSame ? "" : categoryId);
   };
 
+  const onNavigateProductDetail = (productId: string) => {
+    navigation.navigate("ProductDetail", {
+      id: productId,
+    });
+  };
+
   return (
     <View style={[styles.container]}>
       <View style={{ flex: 1 }}>
@@ -64,6 +70,7 @@ export default function ProductListScreen({
                 lastIndex={lastIndex === true}
                 product={item}
                 isOdd={index % 2 != 0}
+                onNavigate={onNavigateProductDetail}
               />
             );
           }}

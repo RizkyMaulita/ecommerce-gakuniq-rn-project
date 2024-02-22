@@ -22,4 +22,5 @@ export type CategoryType = {
   id: string;
   name: string;
   imgUrl?: string;
+  imgUrlActive?: string;
 };

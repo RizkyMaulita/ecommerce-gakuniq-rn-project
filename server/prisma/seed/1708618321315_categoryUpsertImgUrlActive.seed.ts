@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import categories from "./data/category.data";
+import categories from "./data/categoryImgUrlActive.data";
 
 const prisma = new PrismaClient();
 

@@ -10,6 +10,7 @@ export const GET_CATEGORIES = gql`
         id
         name
         imgUrl
+        imgUrlActive
       }
     }
   }

@@ -1,6 +1,7 @@
 import minimist from "minimist";
 import * as fs from "fs/promises";
 import * as path from "path";
+import template from "./template";
 
 type ArgCommandType = {
   name: string;
@@ -16,15 +17,11 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname); // current di
     if (typeof prefixName !== "string" || !prefixName) {
       throw "name is required";
     }
+    const filename = `${new Date().getTime()}_${prefixName}.seed.ts`;
 
-    const targetFilePath = path.join(
-      __dirname + `./../${new Date().getTime()}_${prefixName}.seed.ts`
-    );
+    const targetFilePath = path.join(__dirname + `./../${filename}`);
 
-    await fs.writeFile(
-      targetFilePath,
-      `import { PrismaClient } from "@prisma/client";\n\nconst prisma = new PrismaClient();\n\nexport const run = async () => {};`
-    );
+    await fs.writeFile(targetFilePath, template);
 
     console.log(`File seed successfully created at ${targetFilePath}`);
   } catch (error) {

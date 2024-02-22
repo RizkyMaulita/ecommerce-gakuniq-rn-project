@@ -38,7 +38,7 @@ export const utilities = {
   },
   color: {
     primary: "#FF0000",
-    secondary: "#f77c7c",
+    secondary: "#fc5151",
     tertiary: "",
     lightGray: "#808080",
     extraLightGray: "#7d7d7d",

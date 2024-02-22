@@ -16,8 +16,15 @@ type Props = {
   product: ProductType;
   lastIndex?: boolean;
   isOdd?: boolean;
+  onNavigate: (productId: string) => void;
 };
-export default function ProductCard({ product, lastIndex, isOdd }: Props) {
+
+export default function ProductCard({
+  product,
+  lastIndex,
+  isOdd,
+  onNavigate,
+}: Props) {
   return (
     <View
       style={[
@@ -26,12 +33,25 @@ export default function ProductCard({ product, lastIndex, isOdd }: Props) {
         lastIndex ? styles.cardEnd : {},
       ]}
     >
-      <TouchableOpacity style={[{ flex: 1, height: "100%" }]}>
+      <TouchableOpacity
+        style={[{ flex: 1, height: "100%" }]}
+        onPress={() => onNavigate(product.id)}
+      >
         <View style={[styles.imageContainer]}>
           <Image source={{ uri: product.imgUrl }} style={styles.image} />
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.contentHeader}>
+            <View style={styles.contentCategoryContainer}>
+              <Text style={styles.contentCategoryText}>
+                {product.category?.name}
+              </Text>
+            </View>
+            <View style={styles.contentTypeContainer}>
+              <Text style={styles.contentTypeText}>{product.gender}</Text>
+            </View>
+          </View>
+          <View style={styles.contentBody}>
             <Text style={styles.contentTitle} numberOfLines={2}>
               {product.name}
             </Text>
@@ -51,7 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: utilities.color.extraLightGray,
     flex: 1,
-    height: height / 3.5,
+    height: height / 3.2,
     maxWidth: "100%",
   },
   cardLeft: {
@@ -66,7 +86,7 @@ const styles = StyleSheet.create({
     maxWidth: "46.5%",
   },
   imageContainer: {
-    flex: 3,
+    flex: 2.5,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -77,9 +97,31 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    flexDirection: "row",
   },
   contentHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 2,
+  },
+  contentCategoryContainer: {
+    backgroundColor: utilities.color.secondary,
+    padding: 4,
+    borderRadius: 4,
+  },
+  contentCategoryText: {
+    fontSize: utilities.fontSize.xs - 3,
+    color: "#fff",
+    fontWeight: "600",
+  },
+  contentTypeContainer: {
+    backgroundColor: utilities.fontColor.gray400,
+    padding: 4,
+    borderRadius: 4,
+  },
+  contentTypeText: {
+    fontSize: utilities.fontSize.xs - 3,
+  },
+  contentBody: {
     paddingHorizontal: 2,
     paddingVertical: 5,
   },

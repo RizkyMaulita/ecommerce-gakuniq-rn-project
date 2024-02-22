@@ -5,9 +5,11 @@ import {
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
 import { MainTabParamList, MainTabScreenProps } from "./MainTab";
+import ProductDetailScreen from "@/screens/ProductDetailScreen";
 
 export type ProductStackParamList = {
   ProductList: undefined;
+  ProductDetail: { id: string };
 };
 
 export type ProductStackScreenProps<T extends keyof ProductStackParamList> =
@@ -22,6 +24,11 @@ export default function ProductStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="ProductList" component={ProductListScreen} />
+      <Stack.Screen
+        name="ProductDetail"
+        component={ProductDetailScreen}
+        initialParams={{ id: "" }}
+      />
     </Stack.Navigator>
   );
 }

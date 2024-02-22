@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  ImageSourcePropType,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -55,30 +56,40 @@ export default function ProductListHeader({
       </View>
       <View style={{ alignItems: "center" }}>
         <FlatList
-          data={categories}
+          data={[{ id: "", name: "ALL" }, ...categories]}
           renderItem={({ item }) => {
+            const isActive = item.id === selectedCategoryId;
+            let sourceImg: ImageSourcePropType = require("assets/tshirt.png");
+
+            if (item.name === "ALL") {
+              if (isActive) {
+                sourceImg = require("assets/uniform_active.png");
+              } else {
+                sourceImg = require("assets/uniform.png");
+              }
+            } else if (isActive && item.imgUrlActive) {
+              sourceImg = { uri: item.imgUrlActive };
+            } else if (item.imgUrl) {
+              sourceImg = { uri: item.imgUrl };
+            } else if (isActive) {
+              sourceImg = require("assets/tshirt_active.png");
+            }
+
             return (
               <TouchableOpacity onPress={() => setSelectedCategoryId(item.id)}>
                 <View
                   style={[
                     styles.categoryIconContainer,
-                    item.id === selectedCategoryId
+                    isActive
                       ? { backgroundColor: utilities.color.secondary }
                       : {},
                   ]}
                 >
-                  <Image
-                    source={
-                      item.imgUrl
-                        ? { uri: item.imgUrl }
-                        : require("assets/tshirt.png")
-                    }
-                    style={styles.categoryIconImg}
-                  />
+                  <Image source={sourceImg} style={styles.categoryIconImg} />
                   <Text
                     style={[
                       styles.categoryIconTitle,
-                      item.id === selectedCategoryId ? { color: "#fff" } : {},
+                      isActive ? { color: "#fff" } : {},
                     ]}
                   >
                     {item.name}
@@ -88,6 +99,9 @@ export default function ProductListHeader({
             );
           }}
           horizontal
+          keyExtractor={(item, index) =>
+            `category_icon_${item.id ? item.id : index}`
+          }
         />
       </View>
     </View>
