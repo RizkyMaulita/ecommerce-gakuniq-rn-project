@@ -1,9 +1,9 @@
-import { WishlistStackScreenProps } from "@/navigations/WishlistStack";
+import { MainTabScreenProps } from "@/navigations/MainTab";
 import { Text, View } from "react-native";
 
 export default function WishlistScreen({
   navigation,
-}: WishlistStackScreenProps<"MainWishlist">) {
+}: MainTabScreenProps<"Wishlist">) {
   return (
     <View>
       <Text>Wishlist Screen</Text>

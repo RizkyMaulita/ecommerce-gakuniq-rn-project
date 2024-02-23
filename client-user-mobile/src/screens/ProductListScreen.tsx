@@ -4,7 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductListHeader from "@/components/ProductListHeader";
 import { GET_PRODUCTS } from "@/lib/apollo/queries/product";
 import { ProductType } from "@/lib/types/products.types";
-import { ProductStackScreenProps } from "@/navigations/ProductStack";
+import { MainTabScreenProps } from "@/navigations/MainTab";
 import { useLazyQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import {
@@ -20,7 +20,7 @@ const { height } = Dimensions.get("screen");
 
 export default function ProductListScreen({
   navigation,
-}: ProductStackScreenProps<"ProductList">) {
+}: MainTabScreenProps<"ProductList">) {
   const [fetchProducts, { data, loading, error }] = useLazyQuery(GET_PRODUCTS);
   const dataProducts = (data?.getProducts?.data as ProductType[]) || [];
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
@@ -39,8 +39,9 @@ export default function ProductListScreen({
   };
 
   const onNavigateProductDetail = (productId: string) => {
-    navigation.navigate("ProductDetail", {
-      id: productId,
+    navigation.navigate("ProductStack", {
+      screen: "ProductDetail",
+      params: { id: productId },
     });
   };
 

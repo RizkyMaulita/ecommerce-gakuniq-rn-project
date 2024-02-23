@@ -7,10 +7,12 @@ import MainTab, { MainTabParamList } from "./MainTab";
 import AuthStack, { AuthStackParamList } from "./AuthStack";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import ProductStack, { ProductStackParamList } from "./ProductStack";
 
 export type RootStackParamList = {
   MainTab: NavigatorScreenParams<MainTabParamList>;
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
+  ProductStack: NavigatorScreenParams<ProductStackParamList>;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
@@ -24,7 +26,10 @@ export default function RootStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
-        <Stack.Screen name={"MainTab"} component={MainTab} />
+        <>
+          <Stack.Screen name={"MainTab"} component={MainTab} />
+          <Stack.Screen name={"ProductStack"} component={ProductStack} />
+        </>
       ) : (
         <Stack.Screen name={"AuthStack"} component={AuthStack} />
       )}

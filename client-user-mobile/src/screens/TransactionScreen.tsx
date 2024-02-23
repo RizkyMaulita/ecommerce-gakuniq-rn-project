@@ -1,9 +1,9 @@
-import { TransactionStackScreenProps } from "@/navigations/TransactionStack";
+import { MainTabScreenProps } from "@/navigations/MainTab";
 import { Text, View } from "react-native";
 
 export default function TransactionScreen({
   navigation,
-}: TransactionStackScreenProps<"MainTransaction">) {
+}: MainTabScreenProps<"Transaction">) {
   return (
     <View>
       <Text>Transaction Screen</Text>

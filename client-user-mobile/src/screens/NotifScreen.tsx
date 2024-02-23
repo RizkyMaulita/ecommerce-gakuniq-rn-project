@@ -1,9 +1,9 @@
-import { NotifStackScreenProps } from "@/navigations/NotifStack";
+import { MainTabScreenProps } from "@/navigations/MainTab";
 import { Text, View } from "react-native";
 
 export default function NotifScreen({
   navigation,
-}: NotifStackScreenProps<"MainNotif">) {
+}: MainTabScreenProps<"Notification">) {
   return (
     <View>
       <Text>Notif Screen</Text>

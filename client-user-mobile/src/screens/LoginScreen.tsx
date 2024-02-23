@@ -34,9 +34,7 @@ export default function LoginScreen({
           username: user?.username,
         });
 
-        navigation.navigate("Home", {
-          screen: "ProductList",
-        });
+        navigation.navigate("ProductList");
       }
     },
   });

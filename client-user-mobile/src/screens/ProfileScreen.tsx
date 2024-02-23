@@ -1,5 +1,5 @@
 import { AuthContext } from "@/context/AuthContext";
-import { ProfileStackScreenProps } from "@/navigations/ProfileStack";
+import { MainTabScreenProps } from "@/navigations/MainTab";
 import { globalStyle } from "@/styles/global";
 import { utilities } from "@/styles/utilities";
 import { useContext } from "react";
@@ -7,12 +7,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ProfileScreen({
   navigation,
-}: ProfileStackScreenProps<"MainProfile">) {
+}: MainTabScreenProps<"Profile">) {
   const { deleteUserLogin } = useContext(AuthContext);
 
   const doLogout = async () => {
     await deleteUserLogin();
-    navigation.navigate("Login");
+    navigation.navigate("AuthStack", {
+      screen: "Login",
+    });
   };
 
   return (

@@ -2,27 +2,22 @@ import {
   BottomTabScreenProps,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import ProductStack, { ProductStackParamList } from "./ProductStack";
-import ProfileStack, { ProfileStackParamList } from "./ProfileStack";
-import NotifStack, { NotifStackParamList } from "./NotifStack";
-import {
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from "@react-navigation/native";
+import { CompositeScreenProps } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { utilities } from "@/styles/utilities";
-import TransactionStack, {
-  TransactionStackParamList,
-} from "./TransactionStack";
-import WishlistStack, { WishlistStackParamList } from "./WishlistStack";
 import { RootStackParamList, RootStackScreenProps } from "./RootStack";
+import ProductListScreen from "@/screens/ProductListScreen";
+import WishlistScreen from "@/screens/WishlistScreen";
+import NotifScreen from "@/screens/NotifScreen";
+import TransactionScreen from "@/screens/TransactionScreen";
+import ProfileScreen from "@/screens/ProfileScreen";
 
 export type MainTabParamList = {
-  Home: NavigatorScreenParams<ProductStackParamList>;
-  Profile: NavigatorScreenParams<ProfileStackParamList>;
-  Notification: NavigatorScreenParams<NotifStackParamList>;
-  Transaction: NavigatorScreenParams<TransactionStackParamList>;
-  Wishlist: NavigatorScreenParams<WishlistStackParamList>;
+  ProductList: undefined;
+  Profile: undefined;
+  Notification: undefined;
+  Transaction: undefined;
+  Wishlist: undefined;
 };
 
 export type MainTabScreenProps<T extends keyof MainTabParamList> =
@@ -45,7 +40,7 @@ export default function MainTab() {
             : utilities.color.lightGray;
 
           switch (route.name) {
-            case "Home":
+            case "ProductList":
               iconName = focused ? "home" : "home-outline";
               break;
             case "Profile":
@@ -76,11 +71,11 @@ export default function MainTab() {
         tabBarInactiveTintColor: utilities.color.lightGray,
       })}
     >
-      <Tab.Screen name={"Home"} component={ProductStack} />
-      <Tab.Screen name={"Wishlist"} component={WishlistStack} />
-      <Tab.Screen name={"Notification"} component={NotifStack} />
-      <Tab.Screen name={"Transaction"} component={TransactionStack} />
-      <Tab.Screen name={"Profile"} component={ProfileStack} />
+      <Tab.Screen name={"ProductList"} component={ProductListScreen} />
+      <Tab.Screen name={"Wishlist"} component={WishlistScreen} />
+      <Tab.Screen name={"Notification"} component={NotifScreen} />
+      <Tab.Screen name={"Transaction"} component={TransactionScreen} />
+      <Tab.Screen name={"Profile"} component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
