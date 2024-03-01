@@ -13,7 +13,7 @@ import TransactionScreen from "@/screens/TransactionScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
 
 export type MainTabParamList = {
-  ProductList: undefined;
+  Home: undefined;
   Profile: undefined;
   Notification: undefined;
   Transaction: undefined;
@@ -40,7 +40,7 @@ export default function MainTab() {
             : utilities.color.lightGray;
 
           switch (route.name) {
-            case "ProductList":
+            case "Home":
               iconName = focused ? "home" : "home-outline";
               break;
             case "Profile":
@@ -71,7 +71,7 @@ export default function MainTab() {
         tabBarInactiveTintColor: utilities.color.lightGray,
       })}
     >
-      <Tab.Screen name={"ProductList"} component={ProductListScreen} />
+      <Tab.Screen name={"Home"} component={ProductListScreen} />
       <Tab.Screen name={"Wishlist"} component={WishlistScreen} />
       <Tab.Screen name={"Notification"} component={NotifScreen} />
       <Tab.Screen name={"Transaction"} component={TransactionScreen} />

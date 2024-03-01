@@ -1,0 +1,93 @@
+[
+  {
+    "id": "1",
+    "context": "Product ini bagus sekali",
+    "rate": 4,
+    "productId": "1",
+    "userId": "1",
+    "user": {
+      "id": "1",
+      "username": "Rere",
+      "email": "rere@mail.com"
+    },
+    "createdAt": "1707819797386"
+  },
+  {
+    "id": "2",
+    "context": "Bahannya bagus. Cukup worth it dengan harga segitu",
+    "rate": 5,
+    "productId": "1",
+    "userId": "2",
+    "user": {
+      "id": "2",
+      "username": "Roro",
+      "email": "roro@mail.com"
+    },
+    "createdAt": "1707819797386"
+  },
+  {
+    "id": "3",
+    "context": "Product ini tiada obatt bagusnya. Gilakkkkkkk",
+    "rate": 4,
+    "productId": "1",
+    "userId": "3",
+    "user": {
+      "id": "3",
+      "username": "Rara",
+      "email": "rara@mail.com"
+    },
+    "createdAt": "1707819797386"
+  },
+  {
+    "id": "4",
+    "context": "Saya kurang puas sama produknya",
+    "rate": 1,
+    "productId": "1",
+    "userId": "4",
+    "user": {
+      "id": "4",
+      "username": "Riri",
+      "email": "riri@mail.com"
+    },
+    "createdAt": "1707819797386"
+  },
+  {
+    "id": "5",
+    "context": "Nyesel cuma beli satu",
+    "rate": 5,
+    "productId": "1",
+    "userId": "5",
+    "user": {
+      "id": "5",
+      "username": "Rana",
+      "email": "rana@mail.com"
+    },
+    "createdAt": "1707819797386"
+  },
+  {
+    "id": "6",
+    "context": "Salah pesanan. Belinya apa, datangnya apa. Gimana sih penjualnya.",
+    "rate": 1,
+    "productId": "1",
+    "userId": "6",
+    "user": {
+      "id": "6",
+      "username": "Rino",
+      "email": "rino@mail.com"
+    },
+    "createdAt": "1707819797386"
+  },
+  {
+    "id": "7",
+    "context": "Barangnya sih lumayan. Tapi harganya terlalu pricy. Jadi menurut saya yang kaum mendang mending, kurang worth it sih. But, untuk sesekali gapapalah ya. Thanks",
+    "rate": 3,
+    "productId": "1",
+    "userId": "7",
+    "user": {
+      "id": "7",
+      "username": "Rina",
+      "email": "rina@mail.com"
+    },
+    "createdAt": "1707819797386"
+  }
+]

@@ -20,7 +20,7 @@ const { height } = Dimensions.get("screen");
 
 export default function ProductListScreen({
   navigation,
-}: MainTabScreenProps<"ProductList">) {
+}: MainTabScreenProps<"Home">) {
   const [fetchProducts, { data, loading, error }] = useLazyQuery(GET_PRODUCTS);
   const dataProducts = (data?.getProducts?.data as ProductType[]) || [];
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");

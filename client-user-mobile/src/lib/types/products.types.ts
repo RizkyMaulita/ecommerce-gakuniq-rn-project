@@ -1,3 +1,5 @@
+import { UserType } from "./users.types";
+
 export type ProductType = {
   id: string;
   name: string;
@@ -23,4 +25,14 @@ export type CategoryType = {
   name: string;
   imgUrl?: string;
   imgUrlActive?: string;
+};
+
+export type ProductReviewType = {
+  id: string;
+  context: string;
+  rate: number;
+  productId: string;
+  userId: string;
+  user: UserType;
+  createdAt: Date | string;
 };

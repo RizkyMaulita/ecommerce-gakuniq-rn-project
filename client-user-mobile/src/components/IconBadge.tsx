@@ -10,7 +10,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { utilities } from "@/styles/utilities";
 import { useMemo } from "react";
 
-type IconBadgeProps = {
+export type IconBadgeProps = {
   type?: "Ionicons" | "MaterialIcons";
   name: string;
   badgeValue: number;
@@ -18,6 +18,7 @@ type IconBadgeProps = {
   size?: number;
   styleContainerBadge?: StyleProp<ViewStyle>;
   styleBadge?: StyleProp<TextStyle>;
+  styleIcon?: StyleProp<TextStyle>;
 };
 
 export default function IconBadge({
@@ -28,17 +29,32 @@ export default function IconBadge({
   size = utilities.iconSize.lg,
   styleContainerBadge = {},
   styleBadge = {},
+  styleIcon = {},
 }: IconBadgeProps) {
   const Icon = useMemo(() => {
     switch (type) {
       case "Ionicons":
-        return <Ionicons name={name as never} color={color} size={size} />;
+        return (
+          <Ionicons
+            name={name as never}
+            color={color}
+            size={size}
+            style={styleIcon}
+          />
+        );
       case "MaterialIcons":
-        return <MaterialIcons name={name as never} color={color} size={size} />;
+        return (
+          <MaterialIcons
+            name={name as never}
+            color={color}
+            size={size}
+            style={styleIcon}
+          />
+        );
       default:
         return <></>;
     }
-  }, [type, size, color]);
+  }, [type, size, color, styleIcon]);
 
   return (
     <View>

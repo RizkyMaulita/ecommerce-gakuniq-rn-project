@@ -2,6 +2,7 @@ import { utilities } from "@/styles/utilities";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import IconBadge from "./IconBadge";
 import { Ionicons } from "@expo/vector-icons";
+import HeaderCartProduct from "./HeaderCartProduct";
 
 export default function HeaderSearchProduct() {
   return (
@@ -19,9 +20,7 @@ export default function HeaderSearchProduct() {
         />
       </View>
       <View style={styles.iconContainer}>
-        <TouchableOpacity>
-          <IconBadge name={"cart-outline"} badgeValue={100} />
-        </TouchableOpacity>
+        <HeaderCartProduct />
         <TouchableOpacity>
           <IconBadge
             name={"chatbubble-ellipses-outline"}
