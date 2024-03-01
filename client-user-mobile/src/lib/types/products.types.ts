@@ -36,3 +36,13 @@ export type ProductReviewType = {
   user: UserType;
   createdAt: Date | string;
 };
+
+export type ProductCartType = {
+  id: string;
+  productId: string;
+  userId: string;
+  quantity: number;
+  isActive: boolean;
+  createdAt: Date | string;
+  product: ProductType;
+};

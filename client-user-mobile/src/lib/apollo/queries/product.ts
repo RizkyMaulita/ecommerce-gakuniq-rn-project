@@ -58,3 +58,46 @@ export const GET_PRODUCT = gql`
     }
   }
 `;
+
+export const GET_PRODUCT_CART_COUNT = gql`
+  query GetCountCarts {
+    getCountCarts {
+      statusCode
+      message
+      error
+      data
+    }
+  }
+`;
+
+export const GET_PRODUCT_CARTS = gql`
+  query GetCarts {
+    getCarts {
+      statusCode
+      message
+      error
+      data {
+        id
+        productId
+        userId
+        quantity
+        isActive
+        product {
+          id
+          name
+          description
+          slug
+          imgUrl
+          price
+          stock
+          rate
+          gender
+          sourceUrl
+          categoryId
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;

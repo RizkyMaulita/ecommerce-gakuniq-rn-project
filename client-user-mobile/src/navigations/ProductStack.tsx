@@ -6,9 +6,12 @@ import {
 import { MainTabParamList, MainTabScreenProps } from "./MainTab";
 import { AuthStackParamList, AuthStackScreenProps } from "./AuthStack";
 import ProductDetailScreen from "@/screens/ProductDetailScreen";
+import ProductCartScreen from "@/screens/ProductCartScreen";
+import { Text, View } from "react-native";
 
 export type ProductStackParamList = {
   ProductDetail: { id: string };
+  ProductCart: undefined;
 };
 
 export type ProductStackScreenProps<T extends keyof ProductStackParamList> =
@@ -30,6 +33,7 @@ export default function ProductStack() {
         component={ProductDetailScreen}
         initialParams={{ id: "" }}
       />
+      <Stack.Screen name="ProductCart" component={ProductCartScreen} />
     </Stack.Navigator>
   );
 }

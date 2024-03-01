@@ -12,6 +12,19 @@ export const findCarts = async (userId: string) => {
   });
 };
 
+export const getCountCarts = async (userId: string) => {
+  const result = await prisma.cart.aggregate({
+    _sum: {
+      quantity: true,
+    },
+    where: {
+      userId,
+      isActive: true,
+    },
+  });
+  return result._sum?.quantity || 0;
+};
+
 export const upsertCart = async ({
   productId,
   userId,

@@ -11,13 +11,17 @@ import {
   View,
 } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { useQuery } from "@apollo/client";
-import { GET_PRODUCT } from "@/lib/apollo/queries/product";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_PRODUCT,
+  GET_PRODUCT_CARTS,
+  GET_PRODUCT_CART_COUNT,
+} from "@/lib/apollo/queries/product";
 import Loading from "@/components/Loading";
 import { ProductReviewType, ProductType } from "@/lib/types/products.types";
 import Divider from "@/components/Divider";
 import HeaderCartProduct from "@/components/HeaderCartProduct";
-import { useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import ProductDetailRow from "@/components/ProductDetailRow";
 import ProductDetailHeader from "@/components/ProductDetailHeader";
 import useToggle from "@/hooks/useToggle";
@@ -25,6 +29,8 @@ import { dataProductReviews } from "@/lib/data";
 import calculateRate from "@/lib/utils/calculateRate";
 import ProductDetailReviewListModal from "@/components/ProductDetailReviewModal";
 import { globalStyle } from "@/styles/global";
+import { ADD_PRODUCT_CART } from "@/lib/apollo/mutations/product";
+import { CartContext } from "@/context/CartContext";
 
 const { width, height } = Dimensions.get("window");
 export default function ProductDetailScreen({
@@ -49,6 +55,17 @@ export default function ProductDetailScreen({
     handleShow: onShowReview,
     handleClose: onCloseReview,
   } = useToggle();
+  const { getCartCount } = useContext(CartContext);
+  const [
+    dispatchCartProduct,
+    { loading: loadingMutateCart, error: errorMutateCart },
+  ] = useMutation(ADD_PRODUCT_CART, {
+    onCompleted: async () => {
+      await getCartCount();
+    },
+    // refetchQueries: [GET_PRODUCT_CART_COUNT, GET_PRODUCT_CARTS],
+  });
+
   const rate = calculateRate<ProductReviewType>({
     listData: dataProductReviews,
     keyRate: "rate",
@@ -61,6 +78,18 @@ export default function ProductDetailScreen({
       addWishlist();
     }
   };
+
+  const addCartProduct = useCallback(async () => {
+    try {
+      await dispatchCartProduct({
+        variables: {
+          productId: product.id,
+        },
+      });
+    } catch (err) {
+      console.log(err, "<<< error while add cart product");
+    }
+  }, [product]);
 
   if (loading) {
     return (
@@ -191,7 +220,10 @@ export default function ProductDetailScreen({
             Beli Langsung
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[globalStyle.primaryButton, { width: "49%" }]}>
+        <TouchableOpacity
+          style={[globalStyle.primaryButton, { width: "49%" }]}
+          onPress={addCartProduct}
+        >
           <Text style={[globalStyle.textButton, { fontWeight: "800" }]}>
             + Keranjang
           </Text>

@@ -1,4 +1,4 @@
-import { findCarts, upsertCart } from "@/models/cart.model";
+import { findCarts, getCountCarts, upsertCart } from "@/models/cart.model";
 import { ResponseType } from "@/types/response.types";
 import { ServerContext } from "@/types/server.types";
 import { Cart } from "@prisma/client";
@@ -18,6 +18,7 @@ export const cartTypeDefs = `#graphql
 
   type Query {
     getCarts: ResponseCarts
+    getCountCarts: ResponseCountCart
   }
 
   type Mutation {
@@ -40,6 +41,20 @@ export const cartResolvers = {
         statusCode: 200,
         message: `Successfully retrieved data carts`,
         data: carts,
+      };
+    },
+    getCountCarts: async (
+      _,
+      _args,
+      { authN }: ServerContext
+    ): Promise<ResponseType<number>> => {
+      const userLogin = await authN();
+      const count = await getCountCarts(userLogin.id);
+
+      return {
+        statusCode: 200,
+        message: `Successfully count data active carts`,
+        data: count,
       };
     },
   },
