@@ -9,10 +9,16 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { utilities } from "@/styles/utilities";
-import { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { CartContext } from "@/context/CartContext";
 import EmptyCart from "@/components/EmptyCart";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_PRODUCT_CARTS } from "@/lib/apollo/queries/product";
 import { ProductCartType } from "@/lib/types/products.types";
 import Loading from "@/components/Loading";
@@ -24,13 +30,31 @@ export default function ProductCartScreen({
   route,
 }: ProductStackScreenProps<"ProductCart">) {
   const { count } = useContext(CartContext);
-  const { data, loading, error } = useQuery(GET_PRODUCT_CARTS, {
-    fetchPolicy: "no-cache",
-  });
-  const dataCarts: ProductCartType[] = data?.getCarts?.data || [];
+  const [dataCarts, setDataCarts] = useState<ProductCartType[]>([]);
+  const [dispatchCarts, { data, loading, error }] = useLazyQuery(
+    GET_PRODUCT_CARTS,
+    {
+      fetchPolicy: "no-cache",
+      onCompleted: (res) => {
+        setDataCarts(res?.getCarts?.data || []);
+      },
+    }
+  );
   const [isSelectAll, setIsSelectAll] = useState<boolean>(false);
 
   const [selectedCarts, setSelectedCarts] = useState<ProductCartType[]>([]);
+
+  useEffect(() => {
+    getCarts();
+  }, []);
+
+  const getCarts = async () => {
+    try {
+      await dispatchCarts();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSelectAll = () => {
     setIsSelectAll(!isSelectAll);
@@ -89,7 +113,11 @@ export default function ProductCartScreen({
 
       {/* Main Content */}
       <View style={{ flex: 11.5 }}>
-        {loading ? <Loading isLoading /> : !count ? <EmptyCart /> : null}
+        {loading && !dataCarts.length ? (
+          <Loading isLoading />
+        ) : !count ? (
+          <EmptyCart />
+        ) : null}
         <FlatList
           data={dataCarts}
           renderItem={({ item }) => (
@@ -97,6 +125,7 @@ export default function ProductCartScreen({
               cart={item}
               selectedCarts={selectedCarts}
               onSelect={onSelectCart}
+              getCarts={getCarts}
             />
           )}
           keyExtractor={(item) => item.id}

@@ -5,6 +5,7 @@ export enum ErrorCodeEnum {
   INVALID_TOKEN = "INVALID_TOKEN",
   UNAUTHENTICATION = "UNAUTHENTICATION",
   BAD_REQUEST = "BAD_REQUEST",
+  NOT_FOUND = "NOT_FOUND",
 }
 
 type ErrorStatusCode = 400 | 401 | 403 | 404 | 500;

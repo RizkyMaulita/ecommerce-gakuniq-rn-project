@@ -18,3 +18,36 @@ export const ADD_PRODUCT_CART = gql`
     }
   }
 `;
+
+export const UPDATE_QTY_PRODUCT_CART = gql`
+  mutation UpdateQtyCart($id: ID!, $qty: Int!) {
+    updateQtyCart(id: $id, qty: $qty) {
+      statusCode
+      message
+      error
+      data {
+        id
+        quantity
+        isActive
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const DELETE_PRODUCT_CART = gql`
+  mutation DeleteCart($id: ID!) {
+    deleteCart(id: $id) {
+      statusCode
+      message
+      error
+      data {
+        id
+        productId
+        userId
+        quantity
+        isActive
+      }
+    }
+  }
+`;

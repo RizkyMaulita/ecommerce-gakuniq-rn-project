@@ -1,4 +1,9 @@
-import { findCarts, getCountCarts, upsertCart } from "@/models/cart.model";
+import {
+  findCarts,
+  getCountCarts,
+  updateQtyCart,
+  upsertCart,
+} from "@/models/cart.model";
 import { ResponseType } from "@/types/response.types";
 import { ServerContext } from "@/types/server.types";
 import { Cart } from "@prisma/client";
@@ -23,6 +28,8 @@ export const cartTypeDefs = `#graphql
 
   type Mutation {
     addProductToCart(productId: ID!): ResponseCart
+    updateQtyCart(id: ID!, qty: Int!): ResponseCart
+    deleteCart(id: ID!): ResponseCart
   }
 `;
 
@@ -71,6 +78,45 @@ export const cartResolvers = {
       return {
         statusCode: 201,
         message: `Successfully add product to cart`,
+        data: cart,
+      };
+    },
+    updateQtyCart: async (
+      _,
+      { id, qty },
+      { authN }: ServerContext
+    ): Promise<ResponseType<Cart>> => {
+      const userLogin = await authN();
+
+      const cart = await updateQtyCart({
+        id,
+        userId: userLogin.id,
+        qty,
+      });
+
+      return {
+        statusCode: 200,
+        message: `Successfully update quantity cart`,
+        data: cart,
+      };
+    },
+    deleteCart: async (
+      _,
+      { id },
+      { authN }: ServerContext
+    ): Promise<ResponseType<Cart>> => {
+      const userLogin = await authN();
+
+      const cart = await updateQtyCart({
+        id,
+        userId: userLogin.id,
+        qty: 0,
+        isDelete: true,
+      });
+
+      return {
+        statusCode: 200,
+        message: `Successfully delete cart`,
         data: cart,
       };
     },

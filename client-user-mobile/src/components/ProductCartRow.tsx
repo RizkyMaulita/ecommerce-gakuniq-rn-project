@@ -1,25 +1,93 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { renderPrice } from "@/lib/utils/renderPrice";
 import { ProductCartType } from "@/lib/types/products.types";
-import { useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
+import { useMutation } from "@apollo/client";
+import {
+  DELETE_PRODUCT_CART,
+  UPDATE_QTY_PRODUCT_CART,
+} from "@/lib/apollo/mutations/product";
+import { utilities } from "@/styles/utilities";
+import { CartContext } from "@/context/CartContext";
 
 type Props = {
   cart: ProductCartType;
   selectedCarts: ProductCartType[];
   onSelect: (cart: ProductCartType) => void;
+  getCarts: () => Promise<void>;
 };
 
 export default function ProductCartRow({
   cart,
   selectedCarts,
   onSelect,
+  getCarts,
 }: Props) {
+  const { getCartCount } = useContext(CartContext);
+  const [dispatchUpdateQtyCart, { loading: loadingUpdateCart }] = useMutation(
+    UPDATE_QTY_PRODUCT_CART,
+    {
+      onCompleted: async () => {
+        await getCarts();
+        await getCartCount();
+      },
+    }
+  );
+  const [dispatchDeleteCart, { loading: loadingDeleteCart }] = useMutation(
+    DELETE_PRODUCT_CART,
+    {
+      onCompleted: async () => {
+        await getCarts();
+        await getCartCount();
+      },
+    }
+  );
+
   const isSelected = useMemo(() => {
     const findCart = selectedCarts.find((val) => val.id === cart.id);
 
     return findCart ? true : false;
   }, [cart, selectedCarts]);
+
+  const onUpdateQty = useCallback(
+    (isDecrase?: boolean) => () => {
+      (async function () {
+        const qty = isDecrase ? cart.quantity - 1 : cart.quantity + 1;
+        try {
+          await dispatchUpdateQtyCart({
+            variables: {
+              id: cart.id,
+              qty,
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    },
+    [cart]
+  );
+
+  const onDeleteCart = useCallback(() => {
+    (async function () {
+      try {
+        await dispatchDeleteCart({
+          variables: {
+            id: cart.id,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [cart]);
 
   return (
     <View
@@ -70,6 +138,7 @@ export default function ProductCartRow({
                 paddingVertical: 5,
                 borderWidth: 0.5,
               }}
+              onPress={onUpdateQty(true)}
             >
               <Text>-</Text>
             </TouchableOpacity>
@@ -90,12 +159,22 @@ export default function ProductCartRow({
                 paddingVertical: 5,
                 borderWidth: 0.5,
               }}
+              onPress={onUpdateQty()}
             >
               <Text>+</Text>
             </TouchableOpacity>
+            {(loadingDeleteCart || loadingUpdateCart) && (
+              <ActivityIndicator
+                color={utilities.color.primary}
+                size={24}
+                style={{ marginLeft: 10 }}
+              />
+            )}
           </View>
           <View>
-            <Ionicons name={"trash-outline"} size={24} />
+            <TouchableOpacity onPress={onDeleteCart}>
+              <Ionicons name={"trash-outline"} size={24} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
