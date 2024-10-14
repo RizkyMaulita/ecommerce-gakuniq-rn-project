@@ -1,5 +1,5 @@
 import { ReqUserLoginType } from "./user.types";
 
-export type ServerContext = {
+export interface ServerContext {
   authN: () => Promise<ReqUserLoginType>;
-};
+}

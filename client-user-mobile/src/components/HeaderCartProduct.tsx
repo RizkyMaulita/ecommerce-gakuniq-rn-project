@@ -2,7 +2,7 @@ import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import IconBadge, { IconBadgeProps } from "./IconBadge";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackScreenProps } from "@/navigations/RootStack";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CartContext } from "@/context/CartContext";
 
 type Props = {
@@ -12,13 +12,19 @@ type Props = {
 export default function HeaderCartProduct({ style = {}, ...props }: Props) {
   const navigation =
     useNavigation<RootStackScreenProps<"MainTab">["navigation"]>();
-  const { count } = useContext(CartContext);
+  const { count, getCartCount } = useContext(CartContext);
 
   const goCart = () => {
     navigation.navigate("ProductStack", {
       screen: "ProductCart",
     });
   };
+
+  useEffect(() => {
+    (async () => {
+      await getCartCount();
+    })();
+  }, []);
 
   return (
     <TouchableOpacity style={style} onPress={goCart}>

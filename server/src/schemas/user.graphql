@@ -1,0 +1,69 @@
+type UserRole {
+  id: ID
+  name: String
+  code: String
+}
+
+type User {
+  id: ID
+  username: String
+  email: String
+  password: String
+  fullName: String
+  imgUrl: String
+  phoneNumber: String
+  dob: Date
+  statusVerify: UserVerifyStatusEnum
+  addresses: [Address]
+  roleId: ID
+  role: UserRole
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Address {
+  address: String
+  provinceId: ID
+  cityId: ID
+  subDistrictId: ID
+  zipCode: ID
+  latitude: Float
+  longitude: Float
+  benchmark: String #patokan
+  contactName: String
+  phoneNumber: String
+  tag: AddressTagEnum
+  isMainAddress: Boolean
+}
+
+enum AddressTagEnum {
+  OFFICE
+  HOME
+}
+
+enum UserVerifyStatusEnum {
+  PENDING
+  VERIFIED
+  NOT_VERIFIED
+}
+
+input RegisterInput {
+  username: String!
+  email: String!
+  password: String!
+  fullName: String
+  imgUrl: String
+  phoneNumber: String
+  dob: String
+}
+
+type Query {
+  findUsers: ResponseUsers
+  getMyProfile: ResponseUser
+}
+
+type Mutation {
+  register(payload: RegisterInput): ResponseLogin
+  login(username: String!, password: String!): ResponseLogin
+  updateVerifyStatus(status: UserVerifyStatusEnum!): ResponseUser
+}

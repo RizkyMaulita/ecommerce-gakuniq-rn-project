@@ -109,7 +109,7 @@ export const userResolvers = {
       const userLogin = await authN();
 
       const user = await findUser({ id: userLogin.id });
-      console.log(user);
+
       return {
         statusCode: 200,
         message: `Successfully retrieved data my profile`,

@@ -48,6 +48,8 @@ model User {
   createdAt    DateTime?            @default(now())
   updatedAt    DateTime?
   carts        Cart[]
+  orders       Order[]
+  orderDetails OrderDetail[]
 }
 
 type Address {
@@ -87,20 +89,21 @@ model Category {
 
 // ----- Collection Product
 model Product {
-  id          String            @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-  slug        String
-  imgUrl      String
-  price       Int
-  stock       Int
-  rate        Float?
-  gender      ProductGenderEnum
-  categoryId  String?           @db.ObjectId
-  category    Category?         @relation(fields: [categoryId], references: [id])
-  documents   ProductDoc[]
-  sourceUrl   String?
-  carts       Cart[]
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  slug         String
+  imgUrl       String
+  price        Int
+  stock        Int
+  rate         Float?
+  gender       ProductGenderEnum
+  categoryId   String?           @db.ObjectId
+  category     Category?         @relation(fields: [categoryId], references: [id])
+  documents    ProductDoc[]
+  sourceUrl    String?
+  carts        Cart[]
+  orderDetails OrderDetail[]
 }
 
 type ProductDoc {
@@ -130,4 +133,62 @@ model Cart {
   updatedAt DateTime?
   product   Product   @relation(fields: [productId], references: [id])
   user      User      @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id                 String                       @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String                       @db.ObjectId
+  address            Address
+  totalPrice         Int                          @default(0)
+  totalProductPrice  Int                          @default(0)
+  shippingExpCode    OrderShippingExpCodeEnum?
+  shippingExpService OrderShippingExpServiceEnum?
+  shippingExpPrice   Int?                         @default(0)
+  paymentToken       String?
+  status             OrderStatusEnum              @default(CREATED)
+  createdAt          DateTime?                    @default(now())
+  updatedAt          DateTime?
+  user               User                         @relation(fields: [userId], references: [id])
+  orderDetails       OrderDetail[]
+}
+
+model OrderDetail {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  productId  String    @db.ObjectId
+  orderId    String    @db.ObjectId
+  userId     String    @db.ObjectId
+  quantity   Int
+  price      Int
+  totalPrice Int
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime?
+  user       User      @relation(fields: [userId], references: [id])
+  product    Product   @relation(fields: [productId], references: [id])
+  order      Order     @relation(fields: [orderId], references: [id])
+}
+
+enum OrderShippingExpCodeEnum {
+  JNE
+  TIKI
+  POS
+}
+
+enum OrderShippingExpServiceEnum {
+  OKE
+  YES
+  REG
+}
+
+enum OrderStatusEnum {
+  CREATED
+  PAYMENT_PENDING
+  PAYMENT_SUCCESS
+  PAYMENT_CANCELL
+  PAYMENT_REJECT
+  PROCESS_PACKAGING
+  PROCESS_SHIPPING
+  PROCESS_SHIPPING_RETUR
+  PROCESS_SHIPPING_ARRIVED
+  COMPLETED
+  COMPLAIN
 }

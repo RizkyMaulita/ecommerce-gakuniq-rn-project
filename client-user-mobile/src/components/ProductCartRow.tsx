@@ -22,6 +22,7 @@ type Props = {
   selectedCarts: ProductCartType[];
   onSelect: (cart: ProductCartType) => void;
   getCarts: () => Promise<void>;
+  setSelectedCarts: (carts: ProductCartType[]) => void;
 };
 
 export default function ProductCartRow({
@@ -29,6 +30,7 @@ export default function ProductCartRow({
   selectedCarts,
   onSelect,
   getCarts,
+  setSelectedCarts,
 }: Props) {
   const { getCartCount } = useContext(CartContext);
   const [dispatchUpdateQtyCart, { loading: loadingUpdateCart }] = useMutation(
@@ -67,12 +69,26 @@ export default function ProductCartRow({
               qty,
             },
           });
+          if (isSelected) {
+            const currSelectedCarts = qty
+              ? selectedCarts.map((val) => {
+                  if (val.id === cart.id) {
+                    return {
+                      ...val,
+                      quantity: qty,
+                    };
+                  }
+                  return val;
+                })
+              : selectedCarts.filter((val) => val.id !== cart.id);
+            setSelectedCarts(currSelectedCarts);
+          }
         } catch (error) {
           console.log(error);
         }
       })();
     },
-    [cart]
+    [cart, isSelected, selectedCarts]
   );
 
   const onDeleteCart = useCallback(() => {
@@ -83,11 +99,17 @@ export default function ProductCartRow({
             id: cart.id,
           },
         });
+        if (isSelected) {
+          const currSelectedCarts = selectedCarts.filter(
+            (val) => val.id !== cart.id
+          );
+          setSelectedCarts(currSelectedCarts);
+        }
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [cart]);
+  }, [cart, isSelected, selectedCarts]);
 
   return (
     <View

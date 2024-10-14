@@ -1,7 +1,6 @@
 import { ProductStackScreenProps } from "@/navigations/ProductStack";
 import {
   FlatList,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,7 +17,7 @@ import React, {
 } from "react";
 import { CartContext } from "@/context/CartContext";
 import EmptyCart from "@/components/EmptyCart";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_PRODUCT_CARTS } from "@/lib/apollo/queries/product";
 import { ProductCartType } from "@/lib/types/products.types";
 import Loading from "@/components/Loading";
@@ -29,7 +28,7 @@ export default function ProductCartScreen({
   navigation,
   route,
 }: ProductStackScreenProps<"ProductCart">) {
-  const { count } = useContext(CartContext);
+  const { count, getCartCount } = useContext(CartContext);
   const [dataCarts, setDataCarts] = useState<ProductCartType[]>([]);
   const [dispatchCarts, { data, loading, error }] = useLazyQuery(
     GET_PRODUCT_CARTS,
@@ -51,14 +50,18 @@ export default function ProductCartScreen({
   const getCarts = async () => {
     try {
       await dispatchCarts();
+      await getCartCount();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onSelectAll = () => {
-    setIsSelectAll(!isSelectAll);
-  };
+  const onSelectAll = useCallback(() => {
+    const currIsSelected = !isSelectAll;
+    const currSelectedCarts = currIsSelected ? dataCarts : [];
+    setIsSelectAll(currIsSelected);
+    setSelectedCarts(currSelectedCarts);
+  }, [dataCarts, isSelectAll]);
 
   const onSelectCart = useCallback(
     (cart: ProductCartType) => {
@@ -66,14 +69,22 @@ export default function ProductCartScreen({
         (val) => val.id === cart.id
       );
       if (findIndexCart === -1) {
-        setSelectedCarts([...selectedCarts, cart]);
+        const currSelectedCarts = [...selectedCarts, cart];
+        setSelectedCarts(currSelectedCarts);
+        if (
+          currSelectedCarts.length === dataCarts.length &&
+          dataCarts.length != 0
+        ) {
+          setIsSelectAll(true);
+        }
       } else {
         const currSelectedCarts = [...selectedCarts];
         currSelectedCarts.splice(findIndexCart, 1);
         setSelectedCarts(currSelectedCarts);
+        setIsSelectAll(false);
       }
     },
-    [selectedCarts]
+    [selectedCarts, dataCarts]
   );
 
   const total = useMemo(() => {
@@ -83,13 +94,19 @@ export default function ProductCartScreen({
     };
 
     const result = selectedCarts.reduce((acc, curr) => {
+      const currTotalPrice = (curr.product?.price || 0) * curr.quantity;
       return {
-        price: acc.price + (curr.product?.price || 0),
+        price: acc.price + currTotalPrice,
         count: acc.count + curr.quantity,
       };
     }, value);
 
     return result;
+  }, [selectedCarts]);
+
+  const onBuy = useCallback(() => {
+    console.log("buy");
+    console.log("PRODUCT CART SCREEN, SELECTED CARTS >>>", selectedCarts);
   }, [selectedCarts]);
 
   return (
@@ -126,6 +143,7 @@ export default function ProductCartScreen({
               selectedCarts={selectedCarts}
               onSelect={onSelectCart}
               getCarts={getCarts}
+              setSelectedCarts={setSelectedCarts}
             />
           )}
           keyExtractor={(item) => item.id}
@@ -133,25 +151,8 @@ export default function ProductCartScreen({
       </View>
 
       {/* Bottom */}
-      <View
-        style={{
-          flex: 1.3,
-          backgroundColor: "#fff",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 10,
-          borderTopWidth: 0.2,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 10,
-            paddingLeft: 10,
-            alignItems: "center",
-          }}
-        >
+      <View style={styles.bottomContainer}>
+        <View style={styles.selectAllContainer}>
           <TouchableOpacity onPress={onSelectAll}>
             <Ionicons
               name={isSelectAll ? "checkbox-outline" : "square-outline"}
@@ -167,14 +168,14 @@ export default function ProductCartScreen({
               {renderPrice(total.price)}
             </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity disabled={total.count === 0} onPress={onBuy}>
             <View
-              style={{
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                backgroundColor: utilities.color.primary,
-                borderRadius: 10,
-              }}
+              style={[
+                styles.btnCheckout,
+                total.count === 0
+                  ? { backgroundColor: utilities.color.secondary }
+                  : {},
+              ]}
             >
               <Text style={{ color: "#fff", fontWeight: "700" }}>
                 Beli ({total.count}){" "}
@@ -195,5 +196,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
     paddingHorizontal: 10,
+  },
+  bottomContainer: {
+    flex: 1.3,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    borderTopWidth: 0.2,
+  },
+  selectAllContainer: {
+    flexDirection: "row",
+    gap: 10,
+    paddingLeft: 10,
+    alignItems: "center",
+  },
+  btnCheckout: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: utilities.color.primary,
+    borderRadius: 10,
   },
 });

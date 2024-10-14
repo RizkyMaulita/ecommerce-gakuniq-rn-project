@@ -1,6 +1,7 @@
 import { Prisma, UserRoleEnum, UserVerifyStatusEnum } from "@prisma/client";
 import prisma from ".";
 import { hashPassword } from "@/utils/bcrypt";
+import { mapPrismaUserRoleToGraphQL } from "@/graphql/utils/mapPrismaEnum";
 
 export const registerUser = async (
   data: Prisma.UserCreateInput,
@@ -42,7 +43,12 @@ export const updateStatusVerifyUser = async (
 };
 
 export const findUsers = async () => {
-  return await prisma.user.findMany();
+  return (await prisma.user.findMany()).map((el) => {
+    return {
+      ...el,
+      statusVerify: mapPrismaUserRoleToGraphQL(el.statusVerify),
+    };
+  });
 };
 
 export const findUser = async (queryFilter: Prisma.UserWhereInput) => {

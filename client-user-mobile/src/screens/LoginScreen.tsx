@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Logo from "../components/Logo";
 import { useContext, useState } from "react";
 import { globalStyle } from "@/styles/global";

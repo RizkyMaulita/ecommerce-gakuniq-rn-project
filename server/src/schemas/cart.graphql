@@ -1,0 +1,22 @@
+type Cart {
+  id: ID
+  productId: ID
+  userId: ID
+  quantity: Int
+  isActive: Boolean
+  product: Product
+  user: User
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Query {
+  getCarts: ResponseCarts
+  getCountCarts: ResponseCountCart
+}
+
+type Mutation {
+  addProductToCart(productId: ID!): ResponseCart
+  updateQtyCart(id: ID!, qty: Int!): ResponseCart
+  deleteCart(id: ID!): ResponseCart
+}
