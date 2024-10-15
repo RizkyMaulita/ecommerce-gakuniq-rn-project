@@ -1,7 +1,7 @@
 import { ErrorCodeEnum, generateInstanceError } from "@/utils/error.response";
 import prisma from ".";
 
-export const findCarts = async (userId: string) => {
+export const findUserCarts = async (userId: string) => {
   return await prisma.cart.findMany({
     where: {
       userId,
@@ -16,7 +16,7 @@ export const findCarts = async (userId: string) => {
   });
 };
 
-export const getCountCarts = async (userId: string) => {
+export const getCountUserCarts = async (userId: string) => {
   const result = await prisma.cart.aggregate({
     _sum: {
       quantity: true,
@@ -29,7 +29,7 @@ export const getCountCarts = async (userId: string) => {
   return result._sum?.quantity || 0;
 };
 
-export const upsertCart = async ({
+export const upsertUserCart = async ({
   productId,
   userId,
 }: {
@@ -74,7 +74,7 @@ export const upsertCart = async ({
   });
 };
 
-export const updateQtyCart = async ({
+export const updateQtyUserCart = async ({
   id,
   userId,
   qty,

@@ -12,7 +12,7 @@ const config: CodegenConfig = {
         scalars: {
           Date: "Date",
         },
-        enumAsTypes: true,
+        enumsAsTypes: true,
       },
     },
   },

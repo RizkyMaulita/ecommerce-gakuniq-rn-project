@@ -1,24 +1,30 @@
 import { Prisma } from "@prisma/client";
 import prisma from ".";
-import { mapPrismaProductGenderToGraphQL } from "@/graphql/utils/mapPrismaEnum";
 
-export const findProducts = async (queryFilter: Prisma.ProductWhereInput) => {
-  return (
-    await prisma.product.findMany({
-      where: queryFilter,
-      include: { category: true },
-    })
-  ).map((el) => {
-    return {
-      ...el,
-      gender: mapPrismaProductGenderToGraphQL(el.gender),
-    };
+type QueryProductParamsType = {
+  queryFilter?: Prisma.ProductWhereInput;
+  excludeFields?: Prisma.ProductOmit;
+  limit?: number;
+  offset?: number;
+  include?: Prisma.ProductInclude;
+};
+
+export const findProducts = async ({
+  queryFilter,
+  include,
+}: QueryProductParamsType) => {
+  return await prisma.product.findMany({
+    where: queryFilter,
+    include,
   });
 };
 
-export const findProduct = async (queryFilter: Prisma.ProductWhereInput) => {
+export const findProduct = async ({
+  queryFilter,
+  include,
+}: QueryProductParamsType) => {
   return await prisma.product.findFirst({
     where: queryFilter,
-    include: { category: true },
+    include,
   });
 };

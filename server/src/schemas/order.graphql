@@ -1,7 +1,7 @@
 type Order {
   id: ID!
   userId: ID!
-  address: Address!
+  address: Address
   totalPrice: Int
   totalProductPrice: Int
   shippingExpCode: OrderShippingExpCodeEnum
@@ -16,10 +16,10 @@ type OrderDetail {
   id: ID!
   productId: ID!
   orderId: ID!
-  userId: ID!
-  quantity: Int!
-  price: Int!
-  totalPrice: Int!
+  userId: ID
+  quantity: Int
+  price: Int
+  totalPrice: Int
   createdAt: Date
   updatedAt: Date
 }

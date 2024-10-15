@@ -34,10 +34,9 @@ export type Address = {
   zipCode?: Maybe<Scalars['ID']['output']>;
 };
 
-export enum AddressTagEnum {
-  Home = 'HOME',
-  Office = 'OFFICE'
-}
+export type AddressTagEnum =
+  | 'HOME'
+  | 'OFFICE';
 
 export type Cart = {
   __typename?: 'Cart';
@@ -110,7 +109,7 @@ export type MutationUpdateVerifyStatusArgs = {
 
 export type Order = {
   __typename?: 'Order';
-  address: Address;
+  address?: Maybe<Address>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id: Scalars['ID']['output'];
   paymentToken?: Maybe<Scalars['String']['output']>;
@@ -128,45 +127,43 @@ export type OrderDetail = {
   createdAt?: Maybe<Scalars['Date']['output']>;
   id: Scalars['ID']['output'];
   orderId: Scalars['ID']['output'];
-  price: Scalars['Int']['output'];
+  price?: Maybe<Scalars['Int']['output']>;
   productId: Scalars['ID']['output'];
-  quantity: Scalars['Int']['output'];
-  totalPrice: Scalars['Int']['output'];
+  quantity?: Maybe<Scalars['Int']['output']>;
+  totalPrice?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
-  userId: Scalars['ID']['output'];
+  userId?: Maybe<Scalars['ID']['output']>;
 };
 
-export enum OrderShippingExpCodeEnum {
-  Jne = 'JNE',
-  Pos = 'POS',
-  Tiki = 'TIKI'
-}
+export type OrderShippingExpCodeEnum =
+  | 'JNE'
+  | 'POS'
+  | 'TIKI';
 
-export enum OrderShippingExpServiceEnum {
-  Oke = 'OKE',
-  Reg = 'REG',
-  Yes = 'YES'
-}
+export type OrderShippingExpServiceEnum =
+  | 'OKE'
+  | 'REG'
+  | 'YES';
 
-export enum OrderStatusEnum {
-  Complain = 'COMPLAIN',
-  Completed = 'COMPLETED',
-  Created = 'CREATED',
-  PaymentCancell = 'PAYMENT_CANCELL',
-  PaymentPending = 'PAYMENT_PENDING',
-  PaymentReject = 'PAYMENT_REJECT',
-  PaymentSuccess = 'PAYMENT_SUCCESS',
-  ProcessPackaging = 'PROCESS_PACKAGING',
-  ProcessShipping = 'PROCESS_SHIPPING',
-  ProcessShippingArrived = 'PROCESS_SHIPPING_ARRIVED',
-  ProcessShippingRetur = 'PROCESS_SHIPPING_RETUR'
-}
+export type OrderStatusEnum =
+  | 'COMPLAIN'
+  | 'COMPLETED'
+  | 'CREATED'
+  | 'PAYMENT_CANCELL'
+  | 'PAYMENT_PENDING'
+  | 'PAYMENT_REJECT'
+  | 'PAYMENT_SUCCESS'
+  | 'PROCESS_PACKAGING'
+  | 'PROCESS_SHIPPING'
+  | 'PROCESS_SHIPPING_ARRIVED'
+  | 'PROCESS_SHIPPING_RETUR';
 
 export type Product = {
   __typename?: 'Product';
   category?: Maybe<Category>;
   categoryId?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  documents?: Maybe<Array<Maybe<ProductDoc>>>;
   gender?: Maybe<ProductGenderEnum>;
   id?: Maybe<Scalars['ID']['output']>;
   imgUrl?: Maybe<Scalars['String']['output']>;
@@ -184,16 +181,14 @@ export type ProductDoc = {
   url?: Maybe<Scalars['String']['output']>;
 };
 
-export enum ProductDocTypeEnum {
-  Image = 'IMAGE',
-  Video = 'VIDEO'
-}
+export type ProductDocTypeEnum =
+  | 'IMAGE'
+  | 'VIDEO';
 
-export enum ProductGenderEnum {
-  Female = 'FEMALE',
-  Male = 'MALE',
-  Unisex = 'UNISEX'
-}
+export type ProductGenderEnum =
+  | 'FEMALE'
+  | 'MALE'
+  | 'UNISEX';
 
 export type Query = {
   __typename?: 'Query';
@@ -329,11 +324,10 @@ export type UserRole = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-export enum UserVerifyStatusEnum {
-  NotVerified = 'NOT_VERIFIED',
-  Pending = 'PENDING',
-  Verified = 'VERIFIED'
-}
+export type UserVerifyStatusEnum =
+  | 'NOT_VERIFIED'
+  | 'PENDING'
+  | 'VERIFIED';
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -539,7 +533,7 @@ export type MutationResolvers<ContextType = ServerContext, ParentType extends Re
 }>;
 
 export type OrderResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Order'] = ResolversParentTypes['Order']> = ResolversObject<{
-  address?: Resolver<ResolversTypes['Address'], ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   paymentToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -557,12 +551,12 @@ export type OrderDetailResolvers<ContextType = ServerContext, ParentType extends
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   orderId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   productId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalPrice?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  totalPrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -570,6 +564,7 @@ export type ProductResolvers<ContextType = ServerContext, ParentType extends Res
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   categoryId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  documents?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductDoc']>>>, ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['ProductGenderEnum']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   imgUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

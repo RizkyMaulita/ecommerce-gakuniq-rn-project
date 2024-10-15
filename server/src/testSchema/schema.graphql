@@ -1,9 +1,0 @@
-type UserRole {
-  id: ID
-  name: String
-  code: String
-}
-
-type Query {
-  findUserRoles: [UserRole]
-}

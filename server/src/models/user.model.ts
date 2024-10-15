@@ -1,11 +1,18 @@
 import { Prisma, UserRoleEnum, UserVerifyStatusEnum } from "@prisma/client";
 import prisma from ".";
 import { hashPassword } from "@/utils/bcrypt";
-import { mapPrismaUserRoleToGraphQL } from "@/graphql/utils/mapPrismaEnum";
+
+type QueryUserParamsType = {
+  queryFilter?: Prisma.UserWhereInput;
+  excludeFields?: Prisma.UserOmit;
+  limit?: number;
+  offset?: number;
+  include?: Prisma.UserInclude;
+};
 
 export const registerUser = async (
   data: Prisma.UserCreateInput,
-  role: UserRoleEnum
+  role: UserRoleEnum = UserRoleEnum.CUSTOMER
 ) => {
   const findRole = await prisma.userRole.findFirst({ where: { code: role } });
 
@@ -42,20 +49,18 @@ export const updateStatusVerifyUser = async (
   return user;
 };
 
-export const findUsers = async () => {
-  return (await prisma.user.findMany()).map((el) => {
-    return {
-      ...el,
-      statusVerify: mapPrismaUserRoleToGraphQL(el.statusVerify),
-    };
+export const findUsers = async ({ excludeFields }: QueryUserParamsType) => {
+  return await prisma.user.findMany({
+    omit: excludeFields,
   });
 };
 
-export const findUser = async (queryFilter: Prisma.UserWhereInput) => {
+export const findUser = async ({
+  queryFilter,
+  include,
+}: QueryUserParamsType) => {
   return await prisma.user.findFirst({
     where: queryFilter,
-    include: {
-      role: true,
-    },
+    include,
   });
 };

@@ -11,7 +11,7 @@ type Product {
   sourceUrl: String
   categoryId: String
   category: Category
-  # documents: [ProductDoc]
+  documents: [ProductDoc]
 }
 
 type ProductDoc {
