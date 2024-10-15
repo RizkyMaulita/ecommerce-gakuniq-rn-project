@@ -8,8 +8,10 @@ type Order {
   shippingExpService: OrderShippingExpServiceEnum
   shippingExpPrice: Int
   paymentToken: String
+  status: OrderStatusEnum
   createdAt: Date
   updatedAt: Date
+  orderDetails: [OrderDetail]
 }
 
 type OrderDetail {
@@ -22,6 +24,7 @@ type OrderDetail {
   totalPrice: Int
   createdAt: Date
   updatedAt: Date
+  product: Product
 }
 
 enum OrderShippingExpCodeEnum {
@@ -37,7 +40,9 @@ enum OrderShippingExpServiceEnum {
 }
 
 enum OrderStatusEnum {
+  DRAFT
   CREATED
+  CANCELLED
   PAYMENT_PENDING
   PAYMENT_SUCCESS
   PAYMENT_CANCELL
@@ -48,4 +53,23 @@ enum OrderStatusEnum {
   PROCESS_SHIPPING_ARRIVED
   COMPLETED
   COMPLAIN
+}
+
+input CreateOrderInput {
+  orderId: ID
+  cartIds: [ID]
+  address: AdressInput!
+  shippingExpCode: OrderShippingExpCodeEnum!
+  shippingExpService: OrderShippingExpServiceEnum!
+  shippingExpPrice: Int!
+}
+
+type Query {
+  getMyOrders(status: OrderStatusEnum): ResponseOrders
+  getMyOrderDetail(orderId: ID!): ResponseOrder
+}
+
+type Mutation {
+  createDraftOrder(cartIds: [ID!]!): ResponseOrder
+  upsertOrder(payload: CreateOrderInput!): ResponseOrder
 }

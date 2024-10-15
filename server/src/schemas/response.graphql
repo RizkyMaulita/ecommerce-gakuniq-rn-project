@@ -71,3 +71,17 @@ type ResponseCountCart implements Response {
   error: String
   data: Int
 }
+
+type ResponseOrders implements Response {
+  statusCode: Int
+  message: String
+  error: String
+  data: [Order]
+}
+
+type ResponseOrder implements Response {
+  statusCode: Int
+  message: String
+  error: String
+  data: Order
+}

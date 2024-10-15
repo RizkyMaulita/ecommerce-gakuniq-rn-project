@@ -9,6 +9,8 @@ type Product {
   rate: Float
   gender: ProductGenderEnum
   sourceUrl: String
+  createdAt: Date
+  updatedAt: Date
   categoryId: String
   category: Category
   documents: [ProductDoc]

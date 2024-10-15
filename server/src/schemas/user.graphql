@@ -27,11 +27,11 @@ type Address {
   cityId: ID
   subDistrictId: ID
   zipCode: ID
-  latitude: Float
-  longitude: Float
+  latitude: String
+  longitude: String
   benchmark: String #patokan
   contactName: String
-  phoneNumber: String
+  contactPhoneNumber: String
   tag: AddressTagEnum
   isMainAddress: Boolean
 }
@@ -55,6 +55,21 @@ input RegisterInput {
   imgUrl: String
   phoneNumber: String
   dob: String
+}
+
+input AdressInput {
+  address: String!
+  provinceId: ID!
+  cityId: ID!
+  subDistrictId: ID!
+  zipCode: ID!
+  latitude: String
+  longitude: String
+  benchmark: String #patokan
+  contactName: String
+  contactPhoneNumber: String
+  tag: AddressTagEnum
+  isMainAddress: Boolean
 }
 
 type Query {
