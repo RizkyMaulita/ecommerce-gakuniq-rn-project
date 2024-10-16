@@ -37,3 +37,62 @@ export const GET_MY_PROFILE = gql`
     }
   }
 `;
+
+export const GET_MY_LIST_ADDRESS = gql`
+  query GetMyListAddress {
+    getMyListAddress {
+      statusCode
+      message
+      error
+      data {
+        address
+        province
+        provinceId
+        city
+        cityId
+        subDistrict
+        subDistrictId
+        zipCode
+        latitude
+        longitude
+        benchmark
+        contactName
+        contactPhoneNumber
+        tag
+        isMainAddress
+      }
+    }
+  }
+`;
+
+export const ADD_MY_ADDRESS = gql`
+  mutation AddMyAddress($payload: AdressInput) {
+    addMyAddress(payload: $payload) {
+      statusCode
+      message
+      error
+      data {
+        id
+        username
+        email
+        addresses {
+          address
+          province
+          provinceId
+          city
+          cityId
+          subDistrict
+          subDistrictId
+          zipCode
+          latitude
+          longitude
+          benchmark
+          contactName
+          contactPhoneNumber
+          tag
+          isMainAddress
+        }
+      }
+    }
+  }
+`;

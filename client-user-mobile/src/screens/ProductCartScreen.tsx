@@ -21,14 +21,17 @@ import { useLazyQuery } from "@apollo/client";
 import { GET_PRODUCT_CARTS } from "@/lib/apollo/queries/product";
 import { ProductCartType } from "@/lib/types/products.types";
 import Loading from "@/components/Loading";
-import ProductCartRow from "@/components/ProductCartRow";
+import ProductCartRowWithButton from "@/components/ProductCartRowWithButton";
 import { renderPrice } from "@/lib/utils/renderPrice";
+import { OrderContext } from "@/context/OrderContext";
 
 export default function ProductCartScreen({
   navigation,
   route,
 }: ProductStackScreenProps<"ProductCart">) {
   const { count, getCartCount } = useContext(CartContext);
+  const { setCarts, setTotalProduct, setTotalProductPrice } =
+    useContext(OrderContext);
   const [dataCarts, setDataCarts] = useState<ProductCartType[]>([]);
   const [dispatchCarts, { data, loading, error }] = useLazyQuery(
     GET_PRODUCT_CARTS,
@@ -105,9 +108,19 @@ export default function ProductCartScreen({
   }, [selectedCarts]);
 
   const onBuy = useCallback(() => {
-    console.log("buy");
-    console.log("PRODUCT CART SCREEN, SELECTED CARTS >>>", selectedCarts);
-  }, [selectedCarts]);
+    setCarts(selectedCarts);
+    setTotalProduct(total.count);
+    setTotalProductPrice(total.price);
+
+    navigation.navigate("OrderStack", {
+      screen: "OrderCreate",
+      params: {
+        carts: selectedCarts,
+        totalProductPrice: total.price,
+        quantity: total.count,
+      },
+    });
+  }, [selectedCarts, total]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -138,7 +151,7 @@ export default function ProductCartScreen({
         <FlatList
           data={dataCarts}
           renderItem={({ item }) => (
-            <ProductCartRow
+            <ProductCartRowWithButton
               cart={item}
               selectedCarts={selectedCarts}
               onSelect={onSelectCart}

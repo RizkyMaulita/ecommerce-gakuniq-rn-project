@@ -33,7 +33,7 @@ export type ProductReviewType = {
   rate: number;
   productId: string;
   userId: string;
-  user: UserType;
+  user?: UserType;
   createdAt: Date | string;
 };
 

@@ -22,13 +22,16 @@ export type Address = {
   __typename?: 'Address';
   address?: Maybe<Scalars['String']['output']>;
   benchmark?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
   cityId?: Maybe<Scalars['ID']['output']>;
   contactName?: Maybe<Scalars['String']['output']>;
   contactPhoneNumber?: Maybe<Scalars['String']['output']>;
   isMainAddress?: Maybe<Scalars['Boolean']['output']>;
   latitude?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['String']['output']>;
+  province?: Maybe<Scalars['String']['output']>;
   provinceId?: Maybe<Scalars['ID']['output']>;
+  subDistrict?: Maybe<Scalars['String']['output']>;
   subDistrictId?: Maybe<Scalars['ID']['output']>;
   tag?: Maybe<AddressTagEnum>;
   zipCode?: Maybe<Scalars['ID']['output']>;
@@ -41,14 +44,17 @@ export type AddressTagEnum =
 export type AdressInput = {
   address: Scalars['String']['input'];
   benchmark?: InputMaybe<Scalars['String']['input']>;
-  cityId: Scalars['ID']['input'];
+  city: Scalars['String']['input'];
+  cityId?: InputMaybe<Scalars['ID']['input']>;
   contactName?: InputMaybe<Scalars['String']['input']>;
   contactPhoneNumber?: InputMaybe<Scalars['String']['input']>;
   isMainAddress?: InputMaybe<Scalars['Boolean']['input']>;
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
-  provinceId: Scalars['ID']['input'];
-  subDistrictId: Scalars['ID']['input'];
+  province: Scalars['String']['input'];
+  provinceId?: InputMaybe<Scalars['ID']['input']>;
+  subDistrict?: InputMaybe<Scalars['String']['input']>;
+  subDistrictId?: InputMaybe<Scalars['ID']['input']>;
   tag?: InputMaybe<AddressTagEnum>;
   zipCode: Scalars['ID']['input'];
 };
@@ -91,6 +97,7 @@ export type DataLogin = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addMyAddress?: Maybe<ResponseUser>;
   addProductToCart?: Maybe<ResponseCart>;
   createDraftOrder?: Maybe<ResponseOrder>;
   deleteCart?: Maybe<ResponseCart>;
@@ -99,6 +106,11 @@ export type Mutation = {
   updateQtyCart?: Maybe<ResponseCart>;
   updateVerifyStatus?: Maybe<ResponseUser>;
   upsertOrder?: Maybe<ResponseOrder>;
+};
+
+
+export type MutationAddMyAddressArgs = {
+  payload?: InputMaybe<AdressInput>;
 };
 
 
@@ -180,9 +192,8 @@ export type OrderShippingExpCodeEnum =
   | 'TIKI';
 
 export type OrderShippingExpServiceEnum =
-  | 'OKE'
-  | 'REG'
-  | 'YES';
+  | 'EKONOMI'
+  | 'REGULAR';
 
 export type OrderStatusEnum =
   | 'CANCELLED'
@@ -239,6 +250,7 @@ export type Query = {
   getCarts?: Maybe<ResponseCarts>;
   getCategories?: Maybe<ResponseCategories>;
   getCountCarts?: Maybe<ResponseCountCart>;
+  getMyListAddress?: Maybe<ResponseUserAddresses>;
   getMyOrderDetail?: Maybe<ResponseOrder>;
   getMyOrders?: Maybe<ResponseOrders>;
   getMyProfile?: Maybe<ResponseUser>;
@@ -362,6 +374,14 @@ export type ResponseUser = Response & {
   statusCode?: Maybe<Scalars['Int']['output']>;
 };
 
+export type ResponseUserAddresses = Response & {
+  __typename?: 'ResponseUserAddresses';
+  data?: Maybe<Array<Maybe<Address>>>;
+  error?: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
+  statusCode?: Maybe<Scalars['Int']['output']>;
+};
+
 export type ResponseUsers = Response & {
   __typename?: 'ResponseUsers';
   data?: Maybe<Array<Maybe<User>>>;
@@ -471,7 +491,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
-  Response: ( ResponseCart ) | ( ResponseCarts ) | ( ResponseCategories ) | ( ResponseCountCart ) | ( ResponseLogin ) | ( ResponseOrder ) | ( ResponseOrders ) | ( ResponseProduct ) | ( ResponseProducts ) | ( ResponseUser ) | ( ResponseUsers );
+  Response: ( ResponseCart ) | ( ResponseCarts ) | ( ResponseCategories ) | ( ResponseCountCart ) | ( ResponseLogin ) | ( ResponseOrder ) | ( ResponseOrders ) | ( ResponseProduct ) | ( ResponseProducts ) | ( ResponseUser ) | ( ResponseUserAddresses ) | ( ResponseUsers );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -511,6 +531,7 @@ export type ResolversTypes = ResolversObject<{
   ResponseProduct: ResolverTypeWrapper<ResponseProduct>;
   ResponseProducts: ResolverTypeWrapper<ResponseProducts>;
   ResponseUser: ResolverTypeWrapper<ResponseUser>;
+  ResponseUserAddresses: ResolverTypeWrapper<ResponseUserAddresses>;
   ResponseUsers: ResolverTypeWrapper<ResponseUsers>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
@@ -549,6 +570,7 @@ export type ResolversParentTypes = ResolversObject<{
   ResponseProduct: ResponseProduct;
   ResponseProducts: ResponseProducts;
   ResponseUser: ResponseUser;
+  ResponseUserAddresses: ResponseUserAddresses;
   ResponseUsers: ResponseUsers;
   String: Scalars['String']['output'];
   User: User;
@@ -558,13 +580,16 @@ export type ResolversParentTypes = ResolversObject<{
 export type AddressResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = ResolversObject<{
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   benchmark?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   cityId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   contactName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   contactPhoneNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   isMainAddress?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   latitude?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   longitude?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   provinceId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  subDistrict?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   subDistrictId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   tag?: Resolver<Maybe<ResolversTypes['AddressTagEnum']>, ParentType, ContextType>;
   zipCode?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
@@ -603,6 +628,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  addMyAddress?: Resolver<Maybe<ResolversTypes['ResponseUser']>, ParentType, ContextType, Partial<MutationAddMyAddressArgs>>;
   addProductToCart?: Resolver<Maybe<ResolversTypes['ResponseCart']>, ParentType, ContextType, RequireFields<MutationAddProductToCartArgs, 'productId'>>;
   createDraftOrder?: Resolver<Maybe<ResolversTypes['ResponseOrder']>, ParentType, ContextType, RequireFields<MutationCreateDraftOrderArgs, 'cartIds'>>;
   deleteCart?: Resolver<Maybe<ResolversTypes['ResponseCart']>, ParentType, ContextType, RequireFields<MutationDeleteCartArgs, 'id'>>;
@@ -674,6 +700,7 @@ export type QueryResolvers<ContextType = ServerContext, ParentType extends Resol
   getCarts?: Resolver<Maybe<ResolversTypes['ResponseCarts']>, ParentType, ContextType>;
   getCategories?: Resolver<Maybe<ResolversTypes['ResponseCategories']>, ParentType, ContextType>;
   getCountCarts?: Resolver<Maybe<ResolversTypes['ResponseCountCart']>, ParentType, ContextType>;
+  getMyListAddress?: Resolver<Maybe<ResolversTypes['ResponseUserAddresses']>, ParentType, ContextType>;
   getMyOrderDetail?: Resolver<Maybe<ResolversTypes['ResponseOrder']>, ParentType, ContextType, RequireFields<QueryGetMyOrderDetailArgs, 'orderId'>>;
   getMyOrders?: Resolver<Maybe<ResolversTypes['ResponseOrders']>, ParentType, ContextType, Partial<QueryGetMyOrdersArgs>>;
   getMyProfile?: Resolver<Maybe<ResolversTypes['ResponseUser']>, ParentType, ContextType>;
@@ -682,7 +709,7 @@ export type QueryResolvers<ContextType = ServerContext, ParentType extends Resol
 }>;
 
 export type ResponseResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Response'] = ResolversParentTypes['Response']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'ResponseCart' | 'ResponseCarts' | 'ResponseCategories' | 'ResponseCountCart' | 'ResponseLogin' | 'ResponseOrder' | 'ResponseOrders' | 'ResponseProduct' | 'ResponseProducts' | 'ResponseUser' | 'ResponseUsers', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'ResponseCart' | 'ResponseCarts' | 'ResponseCategories' | 'ResponseCountCart' | 'ResponseLogin' | 'ResponseOrder' | 'ResponseOrders' | 'ResponseProduct' | 'ResponseProducts' | 'ResponseUser' | 'ResponseUserAddresses' | 'ResponseUsers', ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   statusCode?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -768,6 +795,14 @@ export type ResponseUserResolvers<ContextType = ServerContext, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ResponseUserAddressesResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['ResponseUserAddresses'] = ResolversParentTypes['ResponseUserAddresses']> = ResolversObject<{
+  data?: Resolver<Maybe<Array<Maybe<ResolversTypes['Address']>>>, ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  statusCode?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ResponseUsersResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['ResponseUsers'] = ResolversParentTypes['ResponseUsers']> = ResolversObject<{
   data?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -824,6 +859,7 @@ export type Resolvers<ContextType = ServerContext> = ResolversObject<{
   ResponseProduct?: ResponseProductResolvers<ContextType>;
   ResponseProducts?: ResponseProductsResolvers<ContextType>;
   ResponseUser?: ResponseUserResolvers<ContextType>;
+  ResponseUserAddresses?: ResponseUserAddressesResolvers<ContextType>;
   ResponseUsers?: ResponseUsersResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserRole?: UserRoleResolvers<ContextType>;

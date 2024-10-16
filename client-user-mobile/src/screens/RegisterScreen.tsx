@@ -38,7 +38,7 @@ export default function RegisterScreen({
           username: user?.username,
         });
 
-        navigation.navigate("Home", { screen: "ProductList" });
+        navigation.navigate("Home");
       }
     },
   });

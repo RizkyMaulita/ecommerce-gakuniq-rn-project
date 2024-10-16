@@ -42,6 +42,7 @@ export const utilities = {
     tertiary: "",
     lightGray: "#808080",
     extraLightGray: "#7d7d7d",
+    lightRed: "#fa6969",
   },
   iconSize: {
     lg: 32,

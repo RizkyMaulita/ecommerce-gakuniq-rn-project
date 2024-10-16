@@ -23,8 +23,11 @@ type User {
 
 type Address {
   address: String
+  province: String
   provinceId: ID
+  city: String
   cityId: ID
+  subDistrict: String
   subDistrictId: ID
   zipCode: ID
   latitude: String
@@ -59,9 +62,12 @@ input RegisterInput {
 
 input AdressInput {
   address: String!
-  provinceId: ID!
-  cityId: ID!
-  subDistrictId: ID!
+  province: String!
+  provinceId: ID
+  city: String!
+  cityId: ID
+  subDistrict: String
+  subDistrictId: ID
   zipCode: ID!
   latitude: String
   longitude: String
@@ -75,10 +81,12 @@ input AdressInput {
 type Query {
   findUsers: ResponseUsers
   getMyProfile: ResponseUser
+  getMyListAddress: ResponseUserAddresses
 }
 
 type Mutation {
   register(payload: RegisterInput): ResponseLogin
   login(username: String!, password: String!): ResponseLogin
   updateVerifyStatus(status: UserVerifyStatusEnum!): ResponseUser
+  addMyAddress(payload: AdressInput): ResponseUser
 }

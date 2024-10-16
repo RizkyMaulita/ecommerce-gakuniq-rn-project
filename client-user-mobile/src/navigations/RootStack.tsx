@@ -8,11 +8,13 @@ import AuthStack, { AuthStackParamList } from "./AuthStack";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import ProductStack, { ProductStackParamList } from "./ProductStack";
+import OrderStack, { OrderStackParamList } from "./OrderStack";
 
 export type RootStackParamList = {
   MainTab: NavigatorScreenParams<MainTabParamList>;
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
   ProductStack: NavigatorScreenParams<ProductStackParamList>;
+  OrderStack: NavigatorScreenParams<OrderStackParamList>;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
@@ -29,6 +31,7 @@ export default function RootStack() {
         <>
           <Stack.Screen name={"MainTab"} component={MainTab} />
           <Stack.Screen name={"ProductStack"} component={ProductStack} />
+          <Stack.Screen name={"OrderStack"} component={OrderStack} />
         </>
       ) : (
         <Stack.Screen name={"AuthStack"} component={AuthStack} />

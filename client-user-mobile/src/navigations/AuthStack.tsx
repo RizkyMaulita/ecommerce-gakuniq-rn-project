@@ -4,7 +4,6 @@ import {
   NativeStackScreenProps,
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
-import { RootStackParamList, RootStackScreenProps } from "./RootStack";
 import { MainTabParamList, MainTabScreenProps } from "./MainTab";
 import RegisterScreen from "@/screens/RegisterScreen";
 

@@ -6,12 +6,13 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextInputProps,
   TextStyle,
   View,
   ViewStyle,
 } from "react-native";
 
-interface FormInputTextProps {
+type FormInputTextProps = {
   name: string;
   labelName: string;
   value: string;
@@ -22,7 +23,8 @@ interface FormInputTextProps {
   styleLabel?: StyleProp<TextStyle>;
   styleInput?: StyleProp<TextStyle>;
   isSecureText?: boolean;
-}
+  isRequired?: boolean;
+} & Omit<TextInputProps, "onChange">;
 
 export function FormInputText({
   name,
@@ -35,10 +37,15 @@ export function FormInputText({
   styleLabel = {},
   styleInput = {},
   isSecureText,
+  isRequired,
+  ...propsTextInput
 }: FormInputTextProps) {
   return (
     <View style={style}>
-      <Text style={[styles.label, styleLabel]}>{labelName}</Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={[styles.label, styleLabel]}>{labelName}</Text>
+        {isRequired && <Text style={[styles.label]}>(required)</Text>}
+      </View>
       <TextInput
         placeholder={placeholder}
         value={value}
@@ -46,6 +53,7 @@ export function FormInputText({
         onChangeText={(text: string) => onChange(text, name)}
         style={[globalStyle.textInput, styleInput]}
         secureTextEntry={isSecureText}
+        {...propsTextInput}
       />
     </View>
   );

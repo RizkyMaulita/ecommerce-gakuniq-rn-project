@@ -2,7 +2,7 @@ export type UserType = {
   id: string;
   username: string;
   email: string;
-  statusVerify: UserVerifyStatusEnum;
+  statusVerify?: UserVerifyStatusEnum;
   fullName?: string;
   imgUrl?: string;
   dob?: string;
@@ -18,16 +18,19 @@ export enum UserVerifyStatusEnum {
 
 export type UserAddressType = {
   address: string;
-  provinceId: string;
-  cityId: string;
-  subDistrictId: string;
+  province: string;
+  provinceId?: string;
+  city: string;
+  cityId?: string;
+  subDistrict?: string;
+  subDistrictId?: string;
   zipCode: string;
-  latitude: number;
-  longitude: number;
-  benchmark: string;
+  latitude?: string;
+  longitude?: string;
+  benchmark?: string;
   contactName: string;
-  phoneNumber: string;
-  tag: UserAddressTagEnum;
+  contactPhoneNumber: string;
+  tag?: UserAddressTagEnum;
   isMainAddress: boolean;
 };
 

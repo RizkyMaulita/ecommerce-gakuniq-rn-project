@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["omitApi"]
 }
 
@@ -55,9 +55,12 @@ model User {
 
 type Address {
   address            String
-  provinceId         String
-  cityId             String
-  subDistrictId      String
+  provinceId         String?
+  province           String
+  cityId             String?
+  city               String
+  subDistrictId      String?
+  subDistrict        String?
   zipCode            String
   latitude           String?
   longitude          String?
@@ -65,7 +68,7 @@ type Address {
   contactName        String?
   contactPhoneNumber String?
   tag                AddressTagEnum? @default(HOME)
-  isMainAddress      Boolean        @default(false)
+  isMainAddress      Boolean         @default(false)
 }
 
 enum AddressTagEnum {
@@ -105,8 +108,8 @@ model Product {
   sourceUrl    String?
   carts        Cart[]
   orderDetails OrderDetail[]
-   createdAt          DateTime?                    @default(now())
-  updatedAt          DateTime?
+  createdAt    DateTime?         @default(now())
+  updatedAt    DateTime?
 }
 
 type ProductDoc {
@@ -177,9 +180,8 @@ enum OrderShippingExpCodeEnum {
 }
 
 enum OrderShippingExpServiceEnum {
-  OKE
-  YES
-  REG
+  REGULAR
+  EKONOMI
 }
 
 enum OrderStatusEnum {

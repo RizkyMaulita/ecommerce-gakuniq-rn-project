@@ -1,6 +1,12 @@
-import { Prisma, UserRoleEnum, UserVerifyStatusEnum } from "@prisma/client";
+import {
+  Address,
+  Prisma,
+  UserRoleEnum,
+  UserVerifyStatusEnum,
+} from "@prisma/client";
 import prisma from ".";
 import { hashPassword } from "@/utils/bcrypt";
+import { ErrorCodeEnum, generateInstanceError } from "@/utils/error.response";
 
 type QueryUserParamsType = {
   queryFilter?: Prisma.UserWhereInput;
@@ -62,5 +68,52 @@ export const findUser = async ({
   return await prisma.user.findFirst({
     where: queryFilter,
     include,
+  });
+};
+
+export const addMyAddress = async (
+  userId: string,
+  payload: Prisma.AddressCreateInput
+) => {
+  const findUser = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!findUser) {
+    throw generateInstanceError({
+      message: `Invalid User`,
+      code: ErrorCodeEnum.INVALID_LOGIN,
+      statusCode: 401,
+    });
+  }
+
+  const findAddress = findUser.addressess?.find(
+    (address) =>
+      // for unique between address
+      address.contactName === payload.contactName &&
+      address.contactPhoneNumber === payload.contactPhoneNumber &&
+      address.zipCode === payload.zipCode
+  );
+
+  if (findAddress) {
+    throw generateInstanceError({
+      message: `The contact for this postal code is already registered`,
+      code: ErrorCodeEnum.BAD_REQUEST,
+      statusCode: 400,
+    });
+  }
+
+  return await prisma.user.update({
+    data: {
+      addressess: {
+        push: payload,
+      },
+    },
+    where: { id: userId },
+    omit: {
+      password: true,
+    },
   });
 };

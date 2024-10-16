@@ -1,5 +1,6 @@
 import { excludeFields } from "../utils/excludeFields";
 import {
+  addMyAddress,
   findUser,
   findUsers,
   registerUser,
@@ -37,6 +38,20 @@ export const userResolvers: Resolvers = {
         statusCode: 200,
         message: `Successfully retrieved data my profile`,
         data: user,
+      };
+    },
+    getMyListAddress: async (_, _args, { authN }) => {
+      const userLogin = await authN();
+
+      const user = await findUser({
+        queryFilter: { id: userLogin.id },
+        excludeFields: { password: true },
+      });
+
+      return {
+        statusCode: 200,
+        message: `Successfully retrieved data my list address`,
+        data: user.addressess,
       };
     },
   },
@@ -122,6 +137,16 @@ export const userResolvers: Resolvers = {
         statusCode: 200,
         message: `Successfully update status user`,
         data: excludeFields(user, ["password"]),
+      };
+    },
+    addMyAddress: async (_, { payload }, { authN }) => {
+      const userLogin = await authN();
+
+      const user = await addMyAddress(userLogin.id, payload);
+      return {
+        statusCode: 200,
+        message: `Successfully add address user`,
+        data: user,
       };
     },
   },

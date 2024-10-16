@@ -18,6 +18,13 @@ type ResponseUsers implements Response {
   data: [User]
 }
 
+type ResponseUserAddresses implements Response {
+  statusCode: Int
+  message: String
+  error: String
+  data: [Address]
+}
+
 type DataLogin {
   token: String!
   user: User

@@ -34,9 +34,8 @@ enum OrderShippingExpCodeEnum {
 }
 
 enum OrderShippingExpServiceEnum {
-  OKE
-  YES
-  REG
+  REGULAR
+  EKONOMI
 }
 
 enum OrderStatusEnum {

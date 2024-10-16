@@ -4,10 +4,9 @@ import {
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
 import { MainTabParamList, MainTabScreenProps } from "./MainTab";
-import { AuthStackParamList, AuthStackScreenProps } from "./AuthStack";
 import ProductDetailScreen from "@/screens/ProductDetailScreen";
 import ProductCartScreen from "@/screens/ProductCartScreen";
-import { Text, View } from "react-native";
+import { OrderStackParamList, OrderStackScreenProps } from "./OrderStack";
 
 export type ProductStackParamList = {
   ProductDetail: { id: string };
@@ -19,7 +18,7 @@ export type ProductStackScreenProps<T extends keyof ProductStackParamList> =
     NativeStackScreenProps<ProductStackParamList, T>,
     CompositeScreenProps<
       MainTabScreenProps<keyof MainTabParamList>,
-      AuthStackScreenProps<keyof AuthStackParamList>
+      OrderStackScreenProps<keyof OrderStackParamList>
     >
   >;
 
