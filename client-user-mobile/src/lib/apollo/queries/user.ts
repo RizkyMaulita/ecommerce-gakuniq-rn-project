@@ -18,21 +18,21 @@ export const GET_MY_PROFILE = gql`
         statusVerify
         addresses {
           address
+          province
           provinceId
+          city
           cityId
+          subDistrict
           subDistrictId
           zipCode
           latitude
           longitude
           benchmark
           contactName
-          phoneNumber
+          contactPhoneNumber
           tag
           isMainAddress
         }
-        roleId
-        createdAt
-        updatedAt
       }
     }
   }

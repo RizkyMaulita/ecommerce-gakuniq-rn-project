@@ -45,10 +45,6 @@ export default function ProductListScreen({
     });
   };
 
-  console.log(data, "<<<< data");
-
-  console.log(error, "<<< error");
-
   return (
     <View style={[styles.container]}>
       <View style={{ flex: 1 }}>
